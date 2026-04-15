@@ -260,8 +260,6 @@ onBeforeUnmount(() => {
         tabindex="0"
         class="space-y-6 focus-visible:outline-none"
       >
-        <p class="text-sm text-slate-600 dark:text-slate-300">{{ t('termIntro') }}</p>
-
         <TermInputPanel
           :input="term"
           :long-payment="termSummary.longPayment"

@@ -45,10 +45,9 @@ const cardFor = (winnerKey: 'long' | 'short') => {
 
     <div class="mt-5 grid gap-4 md:grid-cols-2">
       <article class="rounded-xl border p-4" :class="cardFor('long')">
-        <div class="flex items-center gap-2">
+        <div class="flex items-center justify-between gap-2">
           <h3 class="text-sm text-slate-600 dark:text-slate-300">{{ t('termLongLabel') }}</h3>
           <InfoTooltip :text="t('tooltipTermLong')" :label="t('termLongLabel')" />
-          <span v-if="summary.winner === 'long'" class="ml-auto rounded-full bg-emerald-500/20 px-2 py-0.5 text-xs font-semibold text-emerald-700 dark:text-emerald-300">{{ t('winner') }}</span>
         </div>
         <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ t('termLongDesc') }}</p>
         <p class="mt-2 text-2xl font-semibold" :class="toneFor('long')">
@@ -66,10 +65,9 @@ const cardFor = (winnerKey: 'long' | 'short') => {
       </article>
 
       <article class="rounded-xl border p-4" :class="cardFor('short')">
-        <div class="flex items-center gap-2">
+        <div class="flex items-center justify-between gap-2">
           <h3 class="text-sm text-slate-600 dark:text-slate-300">{{ t('termShortLabel') }}</h3>
           <InfoTooltip :text="t('tooltipTermShort')" :label="t('termShortLabel')" />
-          <span v-if="summary.winner === 'short'" class="ml-auto rounded-full bg-violet-500/20 px-2 py-0.5 text-xs font-semibold text-violet-700 dark:text-violet-300">{{ t('winner') }}</span>
         </div>
         <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ t('termShortDesc') }}</p>
         <p class="mt-2 text-2xl font-semibold" :class="toneFor('short')">
