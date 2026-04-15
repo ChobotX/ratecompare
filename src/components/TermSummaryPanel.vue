@@ -116,7 +116,7 @@ const cardFor = (winnerKey: StrategyKey) => {
         <dl class="mt-3 grid grid-cols-2 gap-1 text-xs text-slate-500 dark:text-slate-400">
           <dt>{{ t('termPaymentLabel') }}</dt>
           <dd class="text-right">{{ asMoney(summary.noInvestStrategy.monthlyPayment) }}</dd>
-          <dt>{{ t('termInvestMonthly') }}</dt>
+          <dt>{{ t('termSavedMonthly') }}</dt>
           <dd class="text-right">{{ asMoney(summary.noInvestStrategy.monthlyInvestPhase1) }}</dd>
         </dl>
       </article>
