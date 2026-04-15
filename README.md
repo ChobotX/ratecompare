@@ -22,9 +22,12 @@ All three paths are evaluated over the baseline loan payoff horizon, in both nom
 - Winner chosen by real (inflation-adjusted) gain; tie threshold 0.01.
 
 ## Prefilled rates
-On load the app fetches 10-year averages (with static fallbacks on failure):
-- S&P 500 CAGR from `github.com/datasets/s-and-p-500`.
-- ECB euro-area HICP inflation + MIR consumer-loan rate (MIR + 3 p.p. CZ premium).
+On load the SPA calls `GET /api/market`. The container's Node server owns that endpoint and caches results to `/data/market.json` with a 30-day TTL. Static fallbacks are used only when the file is missing AND an upstream fetch fails.
+
+Sources:
+- S&P 500 10y CAGR — `github.com/datasets/s-and-p-500`.
+- ECB euro-area HICP inflation (10y avg).
+- ECB MIR consumer loan rate (10y avg) + 3 p.p. CZ premium.
 
 ## Local Development
 Prerequisite: Node.js 22+ and npm.
@@ -48,9 +51,17 @@ npm run build
 Repo-driven deploy via CapRover's GitHub integration — no GitHub Actions.
 
 Files:
-- `Dockerfile` (multi-stage build, nginx runtime)
+- `Dockerfile` (multi-stage build, Node runtime serving SPA + `/api/market`)
+- `server/index.js` (zero-dep HTTP server)
 - `captain-definition` (schemaVersion 2, Dockerfile path)
 - `.dockerignore`
+
+### Persistent cache
+The app writes `/data/market.json`. In CapRover app → **App Configs → Persistent Directories**:
+- Path in app: `/data`
+- Label: `ratecompare-cache` (or a host path)
+
+Without this, the cache still works inside the container but resets on redeploy.
 
 ### One-time setup
 1. Create the app in CapRover dashboard.

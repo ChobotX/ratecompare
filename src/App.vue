@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n'
 import InputPanel from './components/InputPanel.vue'
 import SummaryPanel from './components/SummaryPanel.vue'
 import { buildComparison, deriveLoanInput } from './lib/finance'
-import { fetchEuTenYearAverageInflation, fetchEuTenYearAverageLoanRate, fetchSp500TenYearAverageReturn } from './lib/market'
+import { fetchMarketBundle } from './lib/market'
 import type { LoanDraftInput, MarketInput, LoanInput } from './lib/types'
 
 const { t } = useI18n()
@@ -35,11 +35,7 @@ const comparison = computed(() => (derivedLoan.value.loan ? buildComparison({ lo
 const hasLoanWarning = computed(() => comparison.value?.baselineLoan.isNegativeAmortization ?? false)
 
 onMounted(async () => {
-  const [sp500, inflation, loanRate] = await Promise.all([
-    fetchSp500TenYearAverageReturn(),
-    fetchEuTenYearAverageInflation(),
-    fetchEuTenYearAverageLoanRate(),
-  ])
+  const { sp500, inflation, loanRate } = await fetchMarketBundle()
   loanDraft.annualRatePct = loanRate.value
   market.annualReturnPct = sp500.value
   market.annualInflationPct = inflation.value
