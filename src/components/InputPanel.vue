@@ -44,7 +44,10 @@ const formatForInput = (value: number | null | undefined, decimals?: number): st
 
       <div class="mt-5 grid gap-4">
         <label class="grid gap-1">
-          <span class="text-sm text-slate-700 dark:text-slate-200">{{ t('loanValue') }}</span>
+          <span class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200">
+            {{ t('loanValue') }}
+            <InfoTooltip :text="t('tooltipLoanValue')" />
+          </span>
           <input v-model.number="loanDraft.principal" type="number" min="0" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100" />
         </label>
 

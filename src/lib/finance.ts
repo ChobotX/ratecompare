@@ -116,8 +116,17 @@ export function deriveLoanInput(draft: LoanDraftInput): LoanDerivationResult {
   }
 
   if (rate != null && payment != null && count != null) {
+    const roundedCount = Math.round(count)
+    if (payment * roundedCount < principal) {
+      return { loan: null, derivedField: null, isComplete: false, message: 'inputsInconsistent' }
+    }
+    const impliedPayment = paymentFromRateAndCount(principal, rate, roundedCount)
+    const tolerance = Math.max(1, impliedPayment * 0.01)
+    if (Math.abs(payment - impliedPayment) > tolerance) {
+      return { loan: null, derivedField: null, isComplete: false, message: 'inputsInconsistent' }
+    }
     return {
-      loan: { principal, annualRatePct: rate, monthlyPayment: payment, paymentsLeft: Math.round(count) },
+      loan: { principal, annualRatePct: rate, monthlyPayment: payment, paymentsLeft: roundedCount },
       derivedField: null,
       isComplete: true,
       message: null,
@@ -139,8 +148,10 @@ export function deriveLoanInput(draft: LoanDraftInput): LoanDerivationResult {
     if (computedCount == null) {
       return { loan: null, derivedField: 'paymentsLeft', isComplete: false, message: 'invalidPaymentForRate' }
     }
+    const rounded = Math.round(computedCount)
+    const paymentsLeft = Math.abs(computedCount - rounded) < 1e-4 ? rounded : Math.ceil(computedCount)
     return {
-      loan: { principal, annualRatePct: rate, monthlyPayment: payment, paymentsLeft: Math.ceil(computedCount) },
+      loan: { principal, annualRatePct: rate, monthlyPayment: payment, paymentsLeft },
       derivedField: 'paymentsLeft',
       isComplete: true,
       message: null,
@@ -168,6 +179,7 @@ function calculateLoan(loan: LoanInput, annualInflationPct: number, principalOve
   const monthlyPayment = Math.max(0, sanitizeNumber(loan.monthlyPayment))
   const monthlyRate = Math.max(0, monthlyRateFromAnnualPct(loan.annualRatePct))
   const monthlyInflation = Math.max(0, monthlyRateFromAnnualPct(annualInflationPct))
+  const maxMonths = Math.min(MAX_MONTHS, Math.max(1, Math.floor(sanitizeNumber(loan.paymentsLeft)) || MAX_MONTHS))
 
   if (principal === 0) {
     return {
@@ -179,13 +191,14 @@ function calculateLoan(loan: LoanInput, annualInflationPct: number, principalOve
     }
   }
 
+  const PAYOFF_EPSILON = 0.005
   let remainingPrincipal = principal
   let totalInterestNominal = 0
   let totalInterestReal = 0
   let monthsToPayoff = 0
   let isNegativeAmortization = false
 
-  for (let month = 1; month <= MAX_MONTHS && remainingPrincipal > 0; month += 1) {
+  for (let month = 1; month <= maxMonths && remainingPrincipal > PAYOFF_EPSILON; month += 1) {
     const monthInterest = remainingPrincipal * monthlyRate
     const principalPayment = monthlyPayment - monthInterest
 
@@ -199,9 +212,13 @@ function calculateLoan(loan: LoanInput, annualInflationPct: number, principalOve
     totalInterestReal += monthInterest / discountFactor
     remainingPrincipal = Math.max(0, remainingPrincipal - principalPayment)
     monthsToPayoff = month
+    if (remainingPrincipal <= PAYOFF_EPSILON) {
+      remainingPrincipal = 0
+      break
+    }
   }
 
-  if (!isNegativeAmortization && remainingPrincipal > 0) {
+  if (!isNegativeAmortization && remainingPrincipal > 0 && monthsToPayoff >= MAX_MONTHS) {
     isNegativeAmortization = true
   }
 
@@ -283,11 +300,16 @@ export function buildComparison(input: ComparisonInput): ComparisonSummary {
     1,
   )
 
-  const overflowReal = calculateInvestment(overflowCash, 0, input.market.annualInflationPct, horizonMonths).endingBalanceReal
-  const paydownGainNominal = clampMoney(sumNominalCashflow(freedMonthlyAmount, horizonMonths) - payoffAmount)
-  const paydownGainReal = clampMoney(
-    sumInflationAdjustedCashflow(freedMonthlyAmount, input.market.annualInflationPct, horizonMonths) + overflowReal - spareCash,
+  const paydownPath = calculateInvestment(
+    overflowCash,
+    0,
+    input.market.annualInflationPct,
+    horizonMonths,
+    freedMonthlyAmount,
+    1,
   )
+  const paydownGainNominal = clampMoney(paydownPath.endingBalanceNominal - spareCash)
+  const paydownGainReal = clampMoney(paydownPath.endingBalanceReal - spareCash)
   const investGainNominal = clampMoney(investPath.endingBalanceNominal - spareCash)
   const investGainReal = clampMoney(investPath.endingBalanceReal - spareCash)
   const paydownThenInvestGainNominal = clampMoney(paydownThenInvestPath.endingBalanceNominal - spareCash)
