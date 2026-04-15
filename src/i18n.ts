@@ -67,6 +67,8 @@ const messages = {
     tooltipPaydownThenInvestPath:
       'Main number is nominal ending gain from investing monthly savings. Small line shows real gain.',
     tooltipWinner: 'Winner is based on inflation-adjusted (real) gain at the same horizon.',
+    themeToLight: 'Switch to light mode',
+    themeToDark: 'Switch to dark mode',
   },
   cs: {
     appName: 'RateCompare',
@@ -125,6 +127,8 @@ const messages = {
     tooltipPaydownThenInvestPath:
       'Hlavní číslo je nominální koncový zisk z investování měsíčních úspor. Malý řádek je reálný zisk.',
     tooltipWinner: 'Vítěz se určuje podle reálného zisku po inflaci na stejném horizontu.',
+    themeToLight: 'Přepnout na světlý režim',
+    themeToDark: 'Přepnout na tmavý režim',
   },
   de: {
     appName: 'RateCompare',
@@ -155,6 +159,8 @@ const messages = {
     payoffInterest: 'Gezahlte Zinsen (nach sofortiger Volltilgung):',
     endingBalance: 'Endstand Investment:',
     growthOnly: 'Nur Investment-Wachstum:',
+    themeToLight: 'Zum hellen Modus wechseln',
+    themeToDark: 'Zum dunklen Modus wechseln',
   },
   sk: {
     appName: 'RateCompare',
@@ -185,6 +191,8 @@ const messages = {
     payoffInterest: 'Zaplatený úrok (po okamžitom úplnom splatení):',
     endingBalance: 'Konečný stav investície:',
     growthOnly: 'Len rast investície:',
+    themeToLight: 'Prepnúť na svetlý režim',
+    themeToDark: 'Prepnúť na tmavý režim',
   },
   pl: {
     appName: 'RateCompare',
@@ -215,6 +223,8 @@ const messages = {
     payoffInterest: 'Odsetki zapłacone (po natychmiastowej pełnej spłacie):',
     endingBalance: 'Końcowe saldo inwestycji:',
     growthOnly: 'Tylko wzrost inwestycji:',
+    themeToLight: 'Przełącz na tryb jasny',
+    themeToDark: 'Przełącz na tryb ciemny',
   },
 } as const
 

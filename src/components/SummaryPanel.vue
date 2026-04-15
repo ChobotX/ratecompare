@@ -25,12 +25,12 @@ const cardToneByKey = computed(() => {
 
   const toneFor = (value: number): string => {
     if (value === max) {
-      return 'text-emerald-300'
+      return 'text-emerald-600 dark:text-emerald-300'
     }
     if (value === min) {
-      return 'text-rose-300'
+      return 'text-rose-600 dark:text-rose-300'
     }
-    return 'text-amber-300'
+    return 'text-amber-600 dark:text-amber-300'
   }
 
   return {
@@ -44,59 +44,59 @@ const winnerCardClassByKey = computed(() => ({
   invest:
     props.summary.winner === 'invest'
       ? 'border-emerald-500/60 bg-emerald-500/10'
-      : 'border-slate-700 bg-slate-950/70',
+      : 'border-slate-200 bg-white/70 dark:border-slate-700 dark:bg-slate-950/70',
   paydown:
     props.summary.winner === 'paydown'
       ? 'border-sky-500/60 bg-sky-500/10'
-      : 'border-slate-700 bg-slate-950/70',
+      : 'border-slate-200 bg-white/70 dark:border-slate-700 dark:bg-slate-950/70',
   paydownThenInvest:
     props.summary.winner === 'paydownThenInvest'
       ? 'border-violet-500/60 bg-violet-500/10'
-      : 'border-slate-700 bg-slate-950/70',
+      : 'border-slate-200 bg-white/70 dark:border-slate-700 dark:bg-slate-950/70',
 }))
 </script>
 
 <template>
-  <section class="rounded-2xl border border-emerald-400/30 bg-slate-900/70 p-5 backdrop-blur">
-    <h2 class="text-lg font-semibold text-emerald-300">{{ t('step4Title') }}</h2>
-    <p class="mt-1 text-sm text-slate-300">{{ t('comparisonHorizon', { months: summary.horizonMonths }) }}</p>
+  <section class="rounded-2xl border border-emerald-400/40 bg-white/80 p-5 backdrop-blur dark:border-emerald-400/30 dark:bg-slate-900/70">
+    <h2 class="text-lg font-semibold text-emerald-700 dark:text-emerald-300">{{ t('step4Title') }}</h2>
+    <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">{{ t('comparisonHorizon', { months: summary.horizonMonths }) }}</p>
 
     <div class="mt-5 grid gap-4 md:grid-cols-3">
       <article class="rounded-xl border p-4" :class="winnerCardClassByKey.invest">
-        <h3 class="flex items-center gap-2 text-sm text-slate-300">
+        <h3 class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
           {{ t('investPathGain') }}
           <InfoTooltip :text="t('tooltipInvestPath')" />
         </h3>
         <p class="mt-2 text-2xl font-semibold" :class="cardToneByKey.invest">
           {{ asMoney(summary.investGainNominal) }}
         </p>
-        <p class="mt-1 text-xs text-slate-400">
+        <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
           {{ t('realAfterInflation') }}: {{ asMoney(summary.investGainReal) }}
         </p>
       </article>
 
       <article class="rounded-xl border p-4" :class="winnerCardClassByKey.paydown">
-        <h3 class="flex items-center gap-2 text-sm text-slate-300">
+        <h3 class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
           {{ t('paydownPathGain') }}
           <InfoTooltip :text="t('tooltipPaydownPath')" />
         </h3>
         <p class="mt-2 text-2xl font-semibold" :class="cardToneByKey.paydown">
           {{ asMoney(summary.paydownGainNominal) }}
         </p>
-        <p class="mt-1 text-xs text-slate-400">
+        <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
           {{ t('realAfterInflation') }}: {{ asMoney(summary.paydownGainReal) }}
         </p>
       </article>
 
       <article class="rounded-xl border p-4" :class="winnerCardClassByKey.paydownThenInvest">
-        <h3 class="flex items-center gap-2 text-sm text-slate-300">
+        <h3 class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
           {{ t('paydownThenInvestPathGain') }}
           <InfoTooltip :text="t('tooltipPaydownThenInvestPath')" />
         </h3>
         <p class="mt-2 text-2xl font-semibold" :class="cardToneByKey.paydownThenInvest">
           {{ asMoney(summary.paydownThenInvestGainNominal) }}
         </p>
-        <p class="mt-1 text-xs text-slate-400">
+        <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
           {{ t('realAfterInflation') }}: {{ asMoney(summary.paydownThenInvestGainReal) }}
         </p>
       </article>

@@ -153,7 +153,7 @@ onBeforeUnmount(() => {
   >
     <button
       type="button"
-      class="inline-flex h-4 w-4 items-center justify-center rounded-full border border-slate-500 text-[10px] font-bold text-slate-300"
+      class="inline-flex h-4 w-4 items-center justify-center rounded-full border border-slate-400 text-[10px] font-bold text-slate-500 dark:border-slate-500 dark:text-slate-300"
       @focus="showTooltip"
       @blur="hideTooltip"
     >
@@ -163,7 +163,7 @@ onBeforeUnmount(() => {
       <span
         ref="tooltip"
         :data-position="tooltipPosition.actualPosition"
-        class="atx-like-tooltip pointer-events-none absolute z-[9999] w-72 max-w-[calc(100vw-1rem)] rounded-md border border-slate-700 bg-slate-950 p-2 text-xs text-slate-200 shadow-xl whitespace-normal break-words transition-opacity duration-150"
+        class="atx-like-tooltip pointer-events-none absolute z-[9999] w-72 max-w-[calc(100vw-1rem)] rounded-md border border-slate-300 bg-white p-2 text-xs text-slate-700 shadow-xl whitespace-normal break-words transition-opacity duration-150 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200"
         :style="{ top: `${tooltipPosition.top}px`, left: `${tooltipPosition.left}px` }"
         :class="show ? 'opacity-100 visible' : 'opacity-0 invisible'"
       >

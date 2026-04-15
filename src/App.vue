@@ -3,6 +3,7 @@ import { computed, onMounted, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
 import InputPanel from './components/InputPanel.vue'
 import SummaryPanel from './components/SummaryPanel.vue'
+import ThemeToggle from './components/ThemeToggle.vue'
 import { buildComparison, deriveLoanInput } from './lib/finance'
 import { fetchMarketBundle } from './lib/market'
 import type { LoanDraftInput, MarketInput, LoanInput } from './lib/types'
@@ -47,14 +48,17 @@ onMounted(async () => {
 </script>
 
 <template>
-  <main class="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-sky-950 px-4 py-10 md:px-8">
+  <main class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-sky-50 px-4 py-10 md:px-8 dark:from-slate-950 dark:via-slate-900 dark:to-sky-950">
     <div class="mx-auto max-w-7xl space-y-6">
-      <header class="space-y-2">
-        <p class="text-sm uppercase tracking-[0.2em] text-sky-300">{{ t('appName') }}</p>
-        <h1 class="text-3xl font-bold text-white md:text-4xl">{{ t('title') }}</h1>
-        <p class="max-w-3xl text-slate-300">
-          {{ t('subtitle') }}
-        </p>
+      <header class="flex items-start justify-between gap-4">
+        <div class="space-y-2">
+          <p class="text-sm uppercase tracking-[0.2em] text-sky-600 dark:text-sky-300">{{ t('appName') }}</p>
+          <h1 class="text-3xl font-bold text-slate-900 md:text-4xl dark:text-white">{{ t('title') }}</h1>
+          <p class="max-w-3xl text-slate-600 dark:text-slate-300">
+            {{ t('subtitle') }}
+          </p>
+        </div>
+        <ThemeToggle class="shrink-0" />
       </header>
 
       <InputPanel
@@ -71,21 +75,21 @@ onMounted(async () => {
 
       <div
         v-if="derivedLoan.message"
-        class="rounded-xl border border-amber-400/50 bg-amber-500/10 p-4 text-sm text-amber-100"
+        class="rounded-xl border border-amber-400/60 bg-amber-500/10 p-4 text-sm text-amber-800 dark:border-amber-400/50 dark:text-amber-100"
       >
         {{ t(`deriveMessage.${derivedLoan.message}`) }}
       </div>
 
       <div
         v-if="hasLoanWarning"
-        class="rounded-xl border border-amber-400/50 bg-amber-500/10 p-4 text-sm text-amber-100"
+        class="rounded-xl border border-amber-400/60 bg-amber-500/10 p-4 text-sm text-amber-800 dark:border-amber-400/50 dark:text-amber-100"
       >
         {{ t('warning') }}
       </div>
 
       <SummaryPanel v-if="comparison" :summary="comparison" />
 
-      <footer class="text-xs text-slate-400">
+      <footer class="text-xs text-slate-500 dark:text-slate-400">
         {{ t('assumptions') }}
       </footer>
     </div>
