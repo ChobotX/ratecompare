@@ -2,6 +2,7 @@ import http from 'node:http'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { LOCALES, DEFAULT_LOCALE, renderLocaleHtml } from './seo.js'
 
 const PORT = Number(process.env.PORT || 80)
 const DATA_DIR = process.env.DATA_DIR || '/data'
@@ -9,6 +10,8 @@ const CACHE_FILE = path.join(DATA_DIR, 'market.json')
 const TTL_MS = 30 * 24 * 60 * 60 * 1000
 const FETCH_TIMEOUT_MS = 8000
 const STATIC_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', 'dist')
+const LOCALE_SET = new Set(LOCALES)
+const localeHtml = {}
 
 const DEFAULTS = {
   sp500: { value: 10.2, source: 'Static fallback', usedFallback: true },
@@ -186,8 +189,35 @@ function send(res, status, headers, body) {
   res.end(body)
 }
 
+function sendLocaleHtml(res, locale) {
+  const html = localeHtml[locale] || localeHtml[DEFAULT_LOCALE]
+  send(res, 200, { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-cache' }, html)
+}
+
+function matchLocaleRoute(urlPath) {
+  if (urlPath === '/') return { locale: DEFAULT_LOCALE, redirect: null }
+  const segments = urlPath.split('/').filter(Boolean)
+  const first = segments[0]?.toLowerCase()
+  if (!LOCALE_SET.has(first)) return null
+  if (segments.length === 1 && !urlPath.endsWith('/')) {
+    return { locale: first, redirect: `/${first}/` }
+  }
+  return { locale: first, redirect: null }
+}
+
 async function serveStatic(req, res) {
   const urlPath = decodeURIComponent((req.url || '/').split('?')[0])
+
+  const localeRoute = matchLocaleRoute(urlPath)
+  const isAssetLike = /\.[a-z0-9]+$/i.test(urlPath)
+
+  if (localeRoute && !isAssetLike) {
+    if (localeRoute.redirect) {
+      return send(res, 301, { location: localeRoute.redirect, 'cache-control': 'no-cache' }, '')
+    }
+    return sendLocaleHtml(res, localeRoute.locale)
+  }
+
   const safe = path.normalize(urlPath).replace(/^(\.\.[\/\\])+/, '')
   let filePath = path.join(STATIC_ROOT, safe === '/' ? 'index.html' : safe)
   if (!filePath.startsWith(STATIC_ROOT)) {
@@ -198,7 +228,8 @@ async function serveStatic(req, res) {
     const stat = await fs.stat(filePath)
     if (stat.isDirectory()) filePath = path.join(filePath, 'index.html')
   } catch {
-    filePath = path.join(STATIC_ROOT, 'index.html')
+    if (!isAssetLike) return sendLocaleHtml(res, DEFAULT_LOCALE)
+    return send(res, 404, { 'content-type': 'text/plain' }, 'not found')
   }
 
   try {
@@ -213,6 +244,13 @@ async function serveStatic(req, res) {
     send(res, 200, headers, body)
   } catch {
     send(res, 404, { 'content-type': 'text/plain' }, 'not found')
+  }
+}
+
+async function loadLocaleHtml() {
+  const template = await fs.readFile(path.join(STATIC_ROOT, 'index.html'), 'utf8')
+  for (const locale of LOCALES) {
+    localeHtml[locale] = renderLocaleHtml(template, locale)
   }
 }
 
@@ -232,6 +270,8 @@ const server = http.createServer(async (req, res) => {
     if (!res.headersSent) send(res, 500, { 'content-type': 'text/plain' }, 'server error')
   }
 })
+
+await loadLocaleHtml()
 
 server.listen(PORT, () => {
   console.log(`ratecompare listening on :${PORT}, data dir ${DATA_DIR}`)
