@@ -260,24 +260,6 @@ function calculateInvestment(
   }
 }
 
-function sumInflationAdjustedCashflow(monthlyAmount: number, annualInflationPct: number, months: number): number {
-  const amount = Math.max(0, sanitizeNumber(monthlyAmount))
-  const monthlyInflation = Math.max(0, monthlyRateFromAnnualPct(annualInflationPct))
-  const horizon = Math.max(0, Math.floor(sanitizeNumber(months)))
-
-  let totalReal = 0
-  for (let month = 1; month <= horizon; month += 1) {
-    totalReal += amount / Math.pow(1 + monthlyInflation, month)
-  }
-  return clampMoney(totalReal)
-}
-
-function sumNominalCashflow(monthlyAmount: number, months: number): number {
-  const amount = Math.max(0, sanitizeNumber(monthlyAmount))
-  const horizon = Math.max(0, Math.floor(sanitizeNumber(months)))
-  return clampMoney(amount * horizon)
-}
-
 export function buildComparison(input: ComparisonInput): ComparisonSummary {
   const spareCash = Math.max(0, sanitizeNumber(input.market.spareCash))
   const payoffAmount = Math.min(spareCash, input.loan.principal)
