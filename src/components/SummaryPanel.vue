@@ -11,6 +11,12 @@ const props = defineProps<{
 
 const { t, locale } = useI18n()
 
+const chartSeries = computed(() => [
+  { key: 'invest', label: t('investPathGain'), color: '#10b981', data: props.summary.investSeriesNominal },
+  { key: 'paydown', label: t('paydownPathGain'), color: '#0ea5e9', data: props.summary.paydownSeriesNominal },
+  { key: 'paydownThenInvest', label: t('paydownThenInvestPathGain'), color: '#8b5cf6', data: props.summary.paydownThenInvestSeriesNominal },
+])
+
 const asMoney = (value: number): string =>
   new Intl.NumberFormat(locale.value, { style: 'currency', currency: 'CZK', maximumFractionDigits: 0 }).format(value)
 
@@ -106,6 +112,6 @@ const winnerCardClassByKey = computed(() => ({
       </article>
     </div>
 
-    <GainsChart :summary="summary" />
+    <GainsChart :series="chartSeries" :horizon-months="summary.horizonMonths" />
   </section>
 </template>

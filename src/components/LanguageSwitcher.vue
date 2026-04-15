@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, useId } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { supportedLocales, defaultLocale, type SupportedLocale } from '../i18n'
+import { buildLocalePath, defaultLocale, parseLocalePath, supportedLocales, type SupportedLocale } from '../i18n'
 
 const { t, locale } = useI18n()
 
@@ -20,8 +20,8 @@ const current = computed<SupportedLocale>(() => (locale.value as SupportedLocale
 function onChange(event: Event) {
   const next = (event.target as HTMLSelectElement).value as SupportedLocale
   if (!supportedLocales.includes(next) || next === current.value) return
-  const target = next === defaultLocale ? '/' : `/${next}/`
-  window.location.assign(target)
+  const { tab } = parseLocalePath(window.location.pathname)
+  window.location.assign(buildLocalePath(next, tab))
 }
 </script>
 
@@ -46,7 +46,7 @@ function onChange(event: Event) {
   background-position: right 0.75rem center;
   background-size: 16px 16px;
 }
-:global(.dark) .lang-select {
+:global(.dark .lang-select) {
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%2394a3b8'><path fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 11.06l3.71-3.83a.75.75 0 111.08 1.04l-4.25 4.39a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z' clip-rule='evenodd'/></svg>");
 }
 </style>

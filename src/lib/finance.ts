@@ -231,7 +231,7 @@ function calculateLoan(loan: LoanInput, annualInflationPct: number, principalOve
   }
 }
 
-function calculateInvestment(
+export function calculateInvestment(
   initialInvestment: number,
   annualReturnPct: number,
   annualInflationPct: number,

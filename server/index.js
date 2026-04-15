@@ -2,7 +2,7 @@ import http from 'node:http'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { LOCALES, DEFAULT_LOCALE, renderLocaleHtml } from './seo.js'
+import { LOCALES, DEFAULT_LOCALE, TABS, DEFAULT_TAB, renderLocaleHtml } from './seo.js'
 
 const PORT = Number(process.env.PORT || 80)
 const DATA_DIR = process.env.DATA_DIR || '/data'
@@ -11,6 +11,7 @@ const TTL_MS = 30 * 24 * 60 * 60 * 1000
 const FETCH_TIMEOUT_MS = 8000
 const STATIC_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', 'dist')
 const LOCALE_SET = new Set(LOCALES)
+const TAB_SET = new Set(TABS)
 const localeHtml = {}
 
 const DEFAULTS = {
@@ -189,20 +190,40 @@ function send(res, status, headers, body) {
   res.end(body)
 }
 
-function sendLocaleHtml(res, locale) {
-  const html = localeHtml[locale] || localeHtml[DEFAULT_LOCALE]
+function sendLocaleHtml(res, locale, tab = DEFAULT_TAB) {
+  const byTab = localeHtml[locale] || localeHtml[DEFAULT_LOCALE]
+  const html = byTab[tab] || byTab[DEFAULT_TAB]
   send(res, 200, { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-cache' }, html)
 }
 
 function matchLocaleRoute(urlPath) {
-  if (urlPath === '/') return { locale: DEFAULT_LOCALE, redirect: null }
+  if (urlPath === '/') return { locale: DEFAULT_LOCALE, tab: DEFAULT_TAB, redirect: null }
   const segments = urlPath.split('/').filter(Boolean)
   const first = segments[0]?.toLowerCase()
-  if (!LOCALE_SET.has(first)) return null
-  if (segments.length === 1 && !urlPath.endsWith('/')) {
-    return { locale: first, redirect: `/${first}/` }
+  const hasLocale = LOCALE_SET.has(first)
+  const localeSeg = hasLocale ? first : null
+  const rest = hasLocale ? segments.slice(1) : segments
+  const locale = localeSeg ?? DEFAULT_LOCALE
+
+  if (rest.length === 0) {
+    if (hasLocale && !urlPath.endsWith('/')) {
+      return { locale, tab: DEFAULT_TAB, redirect: `/${localeSeg}/` }
+    }
+    return { locale, tab: DEFAULT_TAB, redirect: null }
   }
-  return { locale: first, redirect: null }
+
+  if (rest.length === 1 && TAB_SET.has(rest[0].toLowerCase())) {
+    const tab = rest[0].toLowerCase()
+    if (tab === DEFAULT_TAB) {
+      return { locale, tab, redirect: hasLocale ? `/${localeSeg}/` : '/' }
+    }
+    if (!urlPath.endsWith('/')) {
+      return { locale, tab, redirect: hasLocale ? `/${localeSeg}/${tab}/` : `/${tab}/` }
+    }
+    return { locale, tab, redirect: null }
+  }
+
+  return null
 }
 
 async function serveStatic(req, res) {
@@ -215,7 +236,7 @@ async function serveStatic(req, res) {
     if (localeRoute.redirect) {
       return send(res, 301, { location: localeRoute.redirect, 'cache-control': 'no-cache' }, '')
     }
-    return sendLocaleHtml(res, localeRoute.locale)
+    return sendLocaleHtml(res, localeRoute.locale, localeRoute.tab)
   }
 
   const safe = path.normalize(urlPath).replace(/^(\.\.[\/\\])+/, '')
@@ -250,7 +271,10 @@ async function serveStatic(req, res) {
 async function loadLocaleHtml() {
   const template = await fs.readFile(path.join(STATIC_ROOT, 'index.html'), 'utf8')
   for (const locale of LOCALES) {
-    localeHtml[locale] = renderLocaleHtml(template, locale)
+    localeHtml[locale] = {}
+    for (const tab of TABS) {
+      localeHtml[locale][tab] = renderLocaleHtml(template, locale, tab)
+    }
   }
 }
 

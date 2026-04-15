@@ -1,9 +1,21 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import type { ComparisonSummary } from '../lib/types'
 
-const props = defineProps<{ summary: ComparisonSummary }>()
+export interface ChartSeries {
+  key: string
+  label: string
+  color: string
+  data: number[]
+  dashed?: boolean
+}
+
+const props = defineProps<{
+  series: ChartSeries[]
+  horizonMonths: number
+  title?: string
+}>()
+
 const { t, locale } = useI18n()
 
 const W = 800
@@ -13,15 +25,11 @@ const PAD_R = 16
 const PAD_T = 16
 const PAD_B = 36
 
-const series = computed(() => [
-  { key: 'invest', label: t('investPathGain'), color: '#10b981', data: props.summary.investSeriesNominal },
-  { key: 'paydown', label: t('paydownPathGain'), color: '#0ea5e9', data: props.summary.paydownSeriesNominal },
-  { key: 'paydownThenInvest', label: t('paydownThenInvestPathGain'), color: '#8b5cf6', data: props.summary.paydownThenInvestSeriesNominal },
-])
+const chartTitle = computed(() => props.title ?? t('gainsOverTimeTitle'))
 
-const maxMonths = computed(() => Math.max(1, props.summary.horizonMonths))
+const maxMonths = computed(() => Math.max(1, props.horizonMonths))
 const maxValue = computed(() => {
-  const all = series.value.flatMap((s) => s.data)
+  const all = props.series.flatMap((s) => s.data)
   return Math.max(1, ...all)
 })
 
@@ -29,7 +37,7 @@ const xScale = (m: number) => PAD_L + (m / maxMonths.value) * (W - PAD_L - PAD_R
 const yScale = (v: number) => PAD_T + (1 - v / maxValue.value) * (H - PAD_T - PAD_B)
 
 const polylines = computed(() =>
-  series.value.map((s) => ({
+  props.series.map((s) => ({
     ...s,
     points: s.data.map((v, i) => `${xScale(i).toFixed(1)},${yScale(v).toFixed(1)}`).join(' '),
   })),
@@ -58,13 +66,14 @@ const xTicks = computed(() => {
   }
   return out
 })
+
 </script>
 
 <template>
-  <figure class="mt-6" :aria-label="t('gainsOverTimeTitle')">
-    <figcaption class="mb-2 text-sm font-medium text-slate-700 dark:text-slate-200">{{ t('gainsOverTimeTitle') }}</figcaption>
+  <figure class="mt-6" :aria-labelledby="`chart-caption-${chartTitle}`">
+    <figcaption :id="`chart-caption-${chartTitle}`" class="mb-2 text-sm font-medium text-slate-700 dark:text-slate-200">{{ chartTitle }}</figcaption>
     <svg :viewBox="`0 0 ${W} ${H}`" preserveAspectRatio="xMidYMid meet" class="w-full h-auto" role="img">
-      <title>{{ t('gainsOverTimeTitle') }}</title>
+      <title>{{ chartTitle }}</title>
       <g class="text-slate-400 dark:text-slate-500">
         <line v-for="t_ in yTicks" :key="'gy'+t_.v" :x1="PAD_L" :x2="W - PAD_R" :y1="t_.y" :y2="t_.y" stroke="currentColor" stroke-opacity="0.2" />
       </g>
@@ -76,11 +85,25 @@ const xTicks = computed(() => {
         <line :x1="PAD_L" :y1="PAD_T" :x2="PAD_L" :y2="H - PAD_B" stroke="currentColor" stroke-opacity="0.4" />
         <line :x1="PAD_L" :y1="H - PAD_B" :x2="W - PAD_R" :y2="H - PAD_B" stroke="currentColor" stroke-opacity="0.4" />
       </g>
-      <polyline v-for="s in polylines" :key="s.key" :points="s.points" fill="none" :stroke="s.color" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" />
+      <polyline
+        v-for="s in polylines"
+        :key="s.key"
+        :points="s.points"
+        fill="none"
+        :stroke="s.color"
+        stroke-width="2"
+        stroke-linejoin="round"
+        stroke-linecap="round"
+        :stroke-dasharray="s.dashed ? '6 4' : undefined"
+      />
     </svg>
     <ul class="mt-2 flex flex-wrap gap-4 text-xs text-slate-600 dark:text-slate-300">
       <li v-for="s in series" :key="s.key" class="flex items-center gap-2">
-        <span class="inline-block h-0.5 w-4" :style="{ backgroundColor: s.color }" aria-hidden="true" />
+        <span
+          class="inline-block h-0 w-4"
+          :style="s.dashed ? { borderTop: `2px dashed ${s.color}` } : { borderTop: `2px solid ${s.color}` }"
+          aria-hidden="true"
+        />
         {{ s.label }}
       </li>
     </ul>

@@ -46,6 +46,39 @@ export interface ComparisonInput {
   market: MarketInput
 }
 
+export interface TermLoanInput {
+  principal: number
+  monthlyBudget: number
+  longRatePct: number
+  longTermMonths: number
+  shortRatePct: number
+  shortTermMonths: number
+  annualReturnPct: number
+  annualInflationPct: number
+}
+
+export interface TermStrategyResult {
+  monthlyPayment: number
+  monthlyInvestPhase1: number
+  monthlyInvestPhase2: number
+  seriesNominal: number[]
+  loanSeriesNominal: number[]
+  endingBalanceNominal: number
+  endingBalanceReal: number
+}
+
+export interface TermComparisonSummary {
+  horizonMonths: number
+  longPayment: number
+  shortPayment: number
+  longStrategy: TermStrategyResult
+  shortStrategy: TermStrategyResult
+  winner: 'long' | 'short' | 'tie'
+  winnerDeltaReal: number
+  budgetTooLow: boolean
+  shortTermExceedsLong: boolean
+}
+
 export interface ComparisonSummary {
   horizonMonths: number
   baselineLoan: LoanResult

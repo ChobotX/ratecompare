@@ -80,6 +80,48 @@ const messages = {
     moreInformation: 'More information',
     skipToContent: 'Skip to main content',
     languageLabel: 'Language',
+    tabs: {
+      ariaLabel: 'Scenario tabs',
+      payoff: 'Pay off or invest',
+      term: 'Loan term length',
+    },
+    termIntro:
+      'Thesis: when loan rate is below investment return, a longer term with lower monthly payment lets you invest the difference from day one — compounding beats the short-loan-then-invest-later path.',
+    termStep1Title: '1) Loan & monthly budget',
+    termStep1Description: 'Loan principal and the fixed monthly amount you can commit (payment + any surplus invested).',
+    termStep2Title: '2) Long loan (invest the difference)',
+    termStep2Description: 'Longer term at lower monthly payment. Surplus = budget − payment is invested every month.',
+    termStep3Title: '3) Short loan (invest after payoff)',
+    termStep3Description: 'Shorter term, higher monthly payment. After payoff, the full budget is invested until the long-loan horizon ends.',
+    termStep4Title: '4) Market assumptions',
+    termPrincipal: 'Loan principal',
+    termBudget: 'Monthly budget',
+    termLongRate: 'Long loan rate (% p.a.)',
+    termLongMonths: 'Long loan term (months)',
+    termShortRate: 'Short loan rate (% p.a.)',
+    termShortMonths: 'Short loan term (months)',
+    termLongComputed: 'Computed monthly payment: {payment}',
+    termShortComputed: 'Computed monthly payment: {payment}',
+    termSummaryTitle: 'Result summary',
+    termChartTitle: 'Portfolio balance over time',
+    termLongLabel: 'Long loan + invest difference',
+    termShortLabel: 'Short loan + invest after payoff',
+    termLongLoanLabel: 'Long loan — remaining balance',
+    termShortLoanLabel: 'Short loan — remaining balance',
+    termLongDesc: 'Smaller monthly payment, invest the surplus for the full horizon.',
+    termShortDesc: 'Higher monthly payment while loan runs, then full budget invested until horizon ends.',
+    termPaymentLabel: 'Monthly payment',
+    termInvestMonthly: 'Monthly invested',
+    termInvestPhase1: 'Invested during loan',
+    termInvestPhase2: 'Invested after payoff',
+    termWarningBudget: 'Monthly budget is below one of the required payments. Increase budget or lower term/rate.',
+    termWarningTerms: 'Short term must be shorter than long term for a meaningful comparison.',
+    tooltipTermPrincipal: 'Amount borrowed at origination (or remaining principal if refinancing).',
+    tooltipTermBudget: 'Same affordability ceiling used by both strategies — payment plus any monthly investment.',
+    tooltipTermLong: 'Pay the long-loan payment; invest budget − payment every month for the whole horizon.',
+    tooltipTermShort: 'Pay the short-loan payment while it runs; once paid off, invest the full budget until the long-loan horizon ends.',
+    tooltipTermLongMonths: 'Duration of the long loan in months. 360 = 30 years, 300 = 25 years.',
+    tooltipTermShortMonths: 'Duration of the short loan in months. Must be shorter than the long loan. 180 = 15 years, 120 = 10 years.',
   },
   cs: {
     appName: 'RateCompare',
@@ -151,6 +193,48 @@ const messages = {
     moreInformation: 'Více informací',
     skipToContent: 'Přejít na hlavní obsah',
     languageLabel: 'Jazyk',
+    tabs: {
+      ariaLabel: 'Scénáře',
+      payoff: 'Splatit nebo investovat',
+      term: 'Délka úvěru',
+    },
+    termIntro:
+      'Teze: když je sazba úvěru nižší než výnos investic, delší splatnost s nižší měsíční splátkou dovolí investovat rozdíl od prvního měsíce — složené úročení poráží krátký úvěr s pozdějším investováním.',
+    termStep1Title: '1) Úvěr a měsíční rozpočet',
+    termStep1Description: 'Jistina úvěru a pevná měsíční částka, kterou si můžete dovolit (splátka + případné přebytky investované).',
+    termStep2Title: '2) Dlouhý úvěr (investovat rozdíl)',
+    termStep2Description: 'Delší splatnost, nižší splátka. Přebytek = rozpočet − splátka se investuje každý měsíc.',
+    termStep3Title: '3) Krátký úvěr (investovat po doplacení)',
+    termStep3Description: 'Kratší splatnost, vyšší splátka. Po doplacení se celý rozpočet investuje až do konce horizontu dlouhého úvěru.',
+    termStep4Title: '4) Tržní předpoklady',
+    termPrincipal: 'Jistina úvěru',
+    termBudget: 'Měsíční rozpočet',
+    termLongRate: 'Sazba dlouhého úvěru (% p.a.)',
+    termLongMonths: 'Splatnost dlouhého úvěru (měsíce)',
+    termShortRate: 'Sazba krátkého úvěru (% p.a.)',
+    termShortMonths: 'Splatnost krátkého úvěru (měsíce)',
+    termLongComputed: 'Dopočtená měsíční splátka: {payment}',
+    termShortComputed: 'Dopočtená měsíční splátka: {payment}',
+    termSummaryTitle: 'Souhrn výsledků',
+    termChartTitle: 'Vývoj portfolia v čase',
+    termLongLabel: 'Dlouhý úvěr + investování rozdílu',
+    termShortLabel: 'Krátký úvěr + investování po doplacení',
+    termLongLoanLabel: 'Dlouhý úvěr — zbývající jistina',
+    termShortLoanLabel: 'Krátký úvěr — zbývající jistina',
+    termLongDesc: 'Menší splátka, rozdíl investujete po celou dobu horizontu.',
+    termShortDesc: 'Vyšší splátka po dobu úvěru, poté celý rozpočet investovaný až do konce horizontu.',
+    termPaymentLabel: 'Měsíční splátka',
+    termInvestMonthly: 'Měsíčně investováno',
+    termInvestPhase1: 'Investováno během úvěru',
+    termInvestPhase2: 'Investováno po doplacení',
+    termWarningBudget: 'Měsíční rozpočet je nižší než některá z potřebných splátek. Zvyšte rozpočet nebo prodlužte splatnost/snižte sazbu.',
+    termWarningTerms: 'Krátká splatnost musí být kratší než dlouhá, jinak nemá smysl porovnávat.',
+    tooltipTermPrincipal: 'Půjčená částka při uzavření úvěru (nebo zbývající jistina při refinancování).',
+    tooltipTermBudget: 'Stejný strop dostupnosti pro obě strategie — splátka plus měsíční investice.',
+    tooltipTermLong: 'Platíte splátku dlouhého úvěru; rozpočet − splátka investujete každý měsíc po celou dobu horizontu.',
+    tooltipTermShort: 'Platíte vyšší splátku krátkého úvěru; po doplacení investujete celý rozpočet až do konce horizontu dlouhého úvěru.',
+    tooltipTermLongMonths: 'Délka dlouhého úvěru v měsících. 360 = 30 let, 300 = 25 let.',
+    tooltipTermShortMonths: 'Délka krátkého úvěru v měsících. Musí být kratší než dlouhý úvěr. 180 = 15 let, 120 = 10 let.',
   },
   de: {
     appName: 'RateCompare',
@@ -222,6 +306,48 @@ const messages = {
     moreInformation: 'Mehr Informationen',
     skipToContent: 'Zum Hauptinhalt springen',
     languageLabel: 'Sprache',
+    tabs: {
+      ariaLabel: 'Szenario-Tabs',
+      payoff: 'Tilgen oder investieren',
+      term: 'Kreditlaufzeit',
+    },
+    termIntro:
+      'These: Liegt der Kreditzins unter der Investitionsrendite, erlaubt eine längere Laufzeit mit niedrigerer Monatsrate, die Differenz vom ersten Monat an zu investieren — der Zinseszinseffekt schlägt die Strategie mit kurzer Laufzeit und späterem Investieren.',
+    termStep1Title: '1) Kredit & monatliches Budget',
+    termStep1Description: 'Kreditbetrag und die feste monatliche Summe, die Sie bereitstellen können (Rate + ggf. investierter Überschuss).',
+    termStep2Title: '2) Langer Kredit (Differenz investieren)',
+    termStep2Description: 'Längere Laufzeit, niedrigere Rate. Überschuss = Budget − Rate wird jeden Monat investiert.',
+    termStep3Title: '3) Kurzer Kredit (nach Tilgung investieren)',
+    termStep3Description: 'Kürzere Laufzeit, höhere Rate. Nach Tilgung wird das volle Budget bis zum Ende des Lang-Horizonts investiert.',
+    termStep4Title: '4) Marktannahmen',
+    termPrincipal: 'Kreditbetrag',
+    termBudget: 'Monatliches Budget',
+    termLongRate: 'Zins (lang) (% p.a.)',
+    termLongMonths: 'Laufzeit (lang) (Monate)',
+    termShortRate: 'Zins (kurz) (% p.a.)',
+    termShortMonths: 'Laufzeit (kurz) (Monate)',
+    termLongComputed: 'Berechnete Monatsrate: {payment}',
+    termShortComputed: 'Berechnete Monatsrate: {payment}',
+    termSummaryTitle: 'Ergebnisübersicht',
+    termChartTitle: 'Portfolio-Saldo über die Zeit',
+    termLongLabel: 'Langer Kredit + Differenz investieren',
+    termShortLabel: 'Kurzer Kredit + nach Tilgung investieren',
+    termLongLoanLabel: 'Langer Kredit — Restschuld',
+    termShortLoanLabel: 'Kurzer Kredit — Restschuld',
+    termLongDesc: 'Kleinere Rate, Überschuss über den gesamten Horizont investieren.',
+    termShortDesc: 'Höhere Rate während der Laufzeit, danach volles Budget bis Ende des Horizonts investieren.',
+    termPaymentLabel: 'Monatsrate',
+    termInvestMonthly: 'Monatlich investiert',
+    termInvestPhase1: 'Während des Kredits investiert',
+    termInvestPhase2: 'Nach Tilgung investiert',
+    termWarningBudget: 'Monatliches Budget reicht für eine der Raten nicht. Budget erhöhen oder Laufzeit/Zins anpassen.',
+    termWarningTerms: 'Die kurze Laufzeit muss kürzer als die lange sein, sonst ist der Vergleich sinnlos.',
+    tooltipTermPrincipal: 'Ursprünglich aufgenommener Betrag (oder Restschuld bei Umschuldung).',
+    tooltipTermBudget: 'Gleiche Leistbarkeitsgrenze für beide Strategien — Rate plus monatliche Investition.',
+    tooltipTermLong: 'Sie zahlen die Lang-Kreditrate und investieren jeden Monat Budget − Rate über den gesamten Horizont.',
+    tooltipTermShort: 'Sie zahlen die höhere Kurz-Kreditrate; nach Tilgung investieren Sie das volle Budget bis zum Ende des Lang-Horizonts.',
+    tooltipTermLongMonths: 'Laufzeit des langen Kredits in Monaten. 360 = 30 Jahre, 300 = 25 Jahre.',
+    tooltipTermShortMonths: 'Laufzeit des kurzen Kredits in Monaten. Muss kürzer als der lange Kredit sein. 180 = 15 Jahre, 120 = 10 Jahre.',
   },
   sk: {
     appName: 'RateCompare',
@@ -293,6 +419,48 @@ const messages = {
     moreInformation: 'Viac informácií',
     skipToContent: 'Preskočiť na hlavný obsah',
     languageLabel: 'Jazyk',
+    tabs: {
+      ariaLabel: 'Scenáre',
+      payoff: 'Doplatiť alebo investovať',
+      term: 'Dĺžka úveru',
+    },
+    termIntro:
+      'Téza: keď je sadzba úveru nižšia než výnos investícií, dlhšia splatnosť s nižšou splátkou umožní investovať rozdiel od prvého mesiaca — zložené úročenie porazí krátky úver s neskorším investovaním.',
+    termStep1Title: '1) Úver a mesačný rozpočet',
+    termStep1Description: 'Istina úveru a pevná mesačná čiastka, ktorú si môžete dovoliť (splátka + prípadné investované prebytky).',
+    termStep2Title: '2) Dlhý úver (investovať rozdiel)',
+    termStep2Description: 'Dlhšia splatnosť, nižšia splátka. Prebytok = rozpočet − splátka sa investuje každý mesiac.',
+    termStep3Title: '3) Krátky úver (investovať po doplatení)',
+    termStep3Description: 'Kratšia splatnosť, vyššia splátka. Po doplatení sa celý rozpočet investuje až do konca horizontu dlhého úveru.',
+    termStep4Title: '4) Trhové predpoklady',
+    termPrincipal: 'Istina úveru',
+    termBudget: 'Mesačný rozpočet',
+    termLongRate: 'Sadzba dlhého úveru (% p.a.)',
+    termLongMonths: 'Splatnosť dlhého úveru (mesiace)',
+    termShortRate: 'Sadzba krátkeho úveru (% p.a.)',
+    termShortMonths: 'Splatnosť krátkeho úveru (mesiace)',
+    termLongComputed: 'Dopočítaná mesačná splátka: {payment}',
+    termShortComputed: 'Dopočítaná mesačná splátka: {payment}',
+    termSummaryTitle: 'Súhrn výsledkov',
+    termChartTitle: 'Vývoj portfólia v čase',
+    termLongLabel: 'Dlhý úver + investovanie rozdielu',
+    termShortLabel: 'Krátky úver + investovanie po doplatení',
+    termLongLoanLabel: 'Dlhý úver — zostávajúca istina',
+    termShortLoanLabel: 'Krátky úver — zostávajúca istina',
+    termLongDesc: 'Menšia splátka, rozdiel investujete počas celého horizontu.',
+    termShortDesc: 'Vyššia splátka počas úveru, potom celý rozpočet investovaný až do konca horizontu.',
+    termPaymentLabel: 'Mesačná splátka',
+    termInvestMonthly: 'Mesačne investované',
+    termInvestPhase1: 'Investované počas úveru',
+    termInvestPhase2: 'Investované po doplatení',
+    termWarningBudget: 'Mesačný rozpočet je nižší než niektorá z potrebných splátok. Zvýšte rozpočet alebo predĺžte splatnosť/znížte sadzbu.',
+    termWarningTerms: 'Krátka splatnosť musí byť kratšia než dlhá, inak nemá zmysel porovnávať.',
+    tooltipTermPrincipal: 'Požičaná čiastka pri uzavretí úveru (alebo zostávajúca istina pri refinancovaní).',
+    tooltipTermBudget: 'Rovnaký strop dostupnosti pre obe stratégie — splátka plus mesačná investícia.',
+    tooltipTermLong: 'Platíte splátku dlhého úveru; rozpočet − splátka investujete každý mesiac počas celého horizontu.',
+    tooltipTermShort: 'Platíte vyššiu splátku krátkeho úveru; po doplatení investujete celý rozpočet až do konca horizontu dlhého úveru.',
+    tooltipTermLongMonths: 'Dĺžka dlhého úveru v mesiacoch. 360 = 30 rokov, 300 = 25 rokov.',
+    tooltipTermShortMonths: 'Dĺžka krátkeho úveru v mesiacoch. Musí byť kratšia než dlhý úver. 180 = 15 rokov, 120 = 10 rokov.',
   },
   pl: {
     appName: 'RateCompare',
@@ -364,12 +532,58 @@ const messages = {
     moreInformation: 'Więcej informacji',
     skipToContent: 'Przejdź do treści',
     languageLabel: 'Język',
+    tabs: {
+      ariaLabel: 'Scenariusze',
+      payoff: 'Spłacić czy inwestować',
+      term: 'Długość kredytu',
+    },
+    termIntro:
+      'Teza: gdy oprocentowanie kredytu jest niższe niż zwrot z inwestycji, dłuższy okres z niższą ratą pozwala inwestować różnicę od pierwszego miesiąca — procent składany wygrywa z krótkim kredytem i późniejszym inwestowaniem.',
+    termStep1Title: '1) Kredyt i miesięczny budżet',
+    termStep1Description: 'Kapitał kredytu i stała miesięczna kwota, którą możesz przeznaczyć (rata + ewentualna nadwyżka inwestowana).',
+    termStep2Title: '2) Długi kredyt (inwestuj różnicę)',
+    termStep2Description: 'Dłuższy okres, niższa rata. Nadwyżka = budżet − rata inwestowana co miesiąc.',
+    termStep3Title: '3) Krótki kredyt (inwestuj po spłacie)',
+    termStep3Description: 'Krótszy okres, wyższa rata. Po spłacie cały budżet inwestowany do końca horyzontu długiego kredytu.',
+    termStep4Title: '4) Założenia rynkowe',
+    termPrincipal: 'Kapitał kredytu',
+    termBudget: 'Budżet miesięczny',
+    termLongRate: 'Oprocentowanie długiego kredytu (% p.a.)',
+    termLongMonths: 'Okres długiego kredytu (miesiące)',
+    termShortRate: 'Oprocentowanie krótkiego kredytu (% p.a.)',
+    termShortMonths: 'Okres krótkiego kredytu (miesiące)',
+    termLongComputed: 'Obliczona rata miesięczna: {payment}',
+    termShortComputed: 'Obliczona rata miesięczna: {payment}',
+    termSummaryTitle: 'Podsumowanie wyników',
+    termChartTitle: 'Wartość portfela w czasie',
+    termLongLabel: 'Długi kredyt + inwestowanie różnicy',
+    termShortLabel: 'Krótki kredyt + inwestowanie po spłacie',
+    termLongLoanLabel: 'Długi kredyt — pozostały kapitał',
+    termShortLoanLabel: 'Krótki kredyt — pozostały kapitał',
+    termLongDesc: 'Niższa rata, różnica inwestowana przez cały horyzont.',
+    termShortDesc: 'Wyższa rata w trakcie kredytu, potem cały budżet inwestowany do końca horyzontu.',
+    termPaymentLabel: 'Rata miesięczna',
+    termInvestMonthly: 'Inwestowane miesięcznie',
+    termInvestPhase1: 'Inwestowane w trakcie kredytu',
+    termInvestPhase2: 'Inwestowane po spłacie',
+    termWarningBudget: 'Budżet miesięczny jest niższy niż jedna z wymaganych rat. Zwiększ budżet lub zmień okres/oprocentowanie.',
+    termWarningTerms: 'Krótki okres musi być krótszy od długiego, aby porównanie miało sens.',
+    tooltipTermPrincipal: 'Kwota zaciągnięta przy uruchomieniu kredytu (lub pozostały kapitał przy refinansowaniu).',
+    tooltipTermBudget: 'Ten sam pułap zdolności dla obu strategii — rata plus miesięczna inwestycja.',
+    tooltipTermLong: 'Płacisz ratę długiego kredytu; budżet − rata inwestujesz co miesiąc przez cały horyzont.',
+    tooltipTermShort: 'Płacisz wyższą ratę krótkiego kredytu; po spłacie inwestujesz cały budżet do końca horyzontu długiego kredytu.',
+    tooltipTermLongMonths: 'Długość długiego kredytu w miesiącach. 360 = 30 lat, 300 = 25 lat.',
+    tooltipTermShortMonths: 'Długość krótkiego kredytu w miesiącach. Musi być krótsza niż długi kredyt. 180 = 15 lat, 120 = 10 lat.',
   },
 } as const
 
 export type SupportedLocale = keyof typeof messages
 export const supportedLocales: SupportedLocale[] = ['en', 'cs', 'de', 'sk', 'pl']
 export const defaultLocale: SupportedLocale = 'en'
+
+export type AppTab = 'payoff' | 'term'
+export const supportedTabs: AppTab[] = ['payoff', 'term']
+export const defaultTab: AppTab = 'payoff'
 
 export function detectBrowserLocale(): SupportedLocale {
   const browserLocale = (navigator.language || '').toLowerCase()
@@ -378,12 +592,28 @@ export function detectBrowserLocale(): SupportedLocale {
   return supportedLocales.includes(shortCode as SupportedLocale) ? (shortCode as SupportedLocale) : defaultLocale
 }
 
-function detectLocale(): SupportedLocale {
-  const pathLocale = window.location.pathname.split('/')[1]?.toLowerCase()
-  if (supportedLocales.includes(pathLocale as SupportedLocale)) {
-    return pathLocale as SupportedLocale
+export function parseLocalePath(pathname: string): { locale: SupportedLocale; tab: AppTab } {
+  const segments = pathname.split('/').filter(Boolean).map((s) => s.toLowerCase())
+  let locale: SupportedLocale = defaultLocale
+  let rest = segments
+  if (segments.length > 0 && supportedLocales.includes(segments[0] as SupportedLocale)) {
+    locale = segments[0] as SupportedLocale
+    rest = segments.slice(1)
   }
-  return defaultLocale
+  let tab: AppTab = defaultTab
+  if (rest.length > 0 && supportedTabs.includes(rest[0] as AppTab)) {
+    tab = rest[0] as AppTab
+  }
+  return { locale, tab }
+}
+
+function detectLocale(): SupportedLocale {
+  return parseLocalePath(window.location.pathname).locale
+}
+
+export function buildLocalePath(locale: SupportedLocale, tab: AppTab = defaultTab): string {
+  const base = locale === defaultLocale ? '/' : `/${locale}/`
+  return tab === defaultTab ? base : `${base}${tab}/`
 }
 
 export const i18n = createI18n({
