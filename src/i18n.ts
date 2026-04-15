@@ -80,6 +80,7 @@ const messages = {
     moreInformation: 'More information',
     skipToContent: 'Skip to main content',
     languageLabel: 'Language',
+    resetToDefault: 'Reset to default',
     tabs: {
       ariaLabel: 'Scenario tabs',
       payoff: 'Pay off or invest',
@@ -196,6 +197,7 @@ const messages = {
     moreInformation: 'Více informací',
     skipToContent: 'Přejít na hlavní obsah',
     languageLabel: 'Jazyk',
+    resetToDefault: 'Obnovit výchozí',
     tabs: {
       ariaLabel: 'Scénáře',
       payoff: 'Splatit nebo investovat',
@@ -312,6 +314,7 @@ const messages = {
     moreInformation: 'Mehr Informationen',
     skipToContent: 'Zum Hauptinhalt springen',
     languageLabel: 'Sprache',
+    resetToDefault: 'Auf Standard zurücksetzen',
     tabs: {
       ariaLabel: 'Szenario-Tabs',
       payoff: 'Tilgen oder investieren',
@@ -428,6 +431,7 @@ const messages = {
     moreInformation: 'Viac informácií',
     skipToContent: 'Preskočiť na hlavný obsah',
     languageLabel: 'Jazyk',
+    resetToDefault: 'Obnoviť predvolené',
     tabs: {
       ariaLabel: 'Scenáre',
       payoff: 'Doplatiť alebo investovať',
@@ -544,6 +548,7 @@ const messages = {
     moreInformation: 'Więcej informacji',
     skipToContent: 'Przejdź do treści',
     languageLabel: 'Język',
+    resetToDefault: 'Przywróć domyślną',
     tabs: {
       ariaLabel: 'Scenariusze',
       payoff: 'Spłacić czy inwestować',

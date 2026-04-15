@@ -2,7 +2,9 @@
 import { ref, useId } from 'vue'
 import { useI18n } from 'vue-i18n'
 import InfoTooltip from './InfoTooltip.vue'
+import ResetButton from './ResetButton.vue'
 import type { DerivedLoanField, LoanDraftInput, LoanInput, MarketInput } from '../lib/types'
+import { defaults, isDefault } from '../lib/defaults'
 
 const { t } = useI18n()
 
@@ -69,6 +71,19 @@ const displayValue = (key: DerivableKey, decimals: number): string => {
   if (props.loanDraft[key] != null) return String(props.loanDraft[key])
   return formatForInput(props.resolvedLoan?.[key], decimals)
 }
+
+const DERIVABLE_KEYS: readonly DerivableKey[] = ['annualRatePct', 'monthlyPayment', 'paymentsLeft']
+function resetLoan<K extends keyof LoanDraftInput>(key: K) {
+  props.loanDraft[key] = defaults.loanDraft[key]
+  if ((DERIVABLE_KEYS as readonly string[]).includes(key as string)) {
+    draftBuffers[key as DerivableKey].value = null
+  }
+}
+function resetMarket<K extends keyof MarketInput>(key: K) {
+  props.market[key] = defaults.market[key]
+}
+const loanChanged = (key: keyof LoanDraftInput): boolean => !isDefault(props.loanDraft[key], defaults.loanDraft[key])
+const marketChanged = (key: keyof MarketInput): boolean => !isDefault(props.market[key], defaults.market[key])
 </script>
 
 <template>
@@ -83,7 +98,10 @@ const displayValue = (key: DerivableKey, decimals: number): string => {
             <label :for="loanPrincipalId">{{ t('loanValue') }}</label>
             <InfoTooltip :text="t('tooltipLoanValue')" :label="t('loanValue')" />
           </div>
-          <input :id="loanPrincipalId" v-model.number="loanDraft.principal" type="number" inputmode="numeric" min="0" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100" />
+          <div class="relative">
+            <input :id="loanPrincipalId" v-model.number="loanDraft.principal" type="number" inputmode="numeric" min="0" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 pr-10 text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100" />
+            <ResetButton class="absolute right-2 top-1/2 -translate-y-1/2" :visible="loanChanged('principal')" :label="t('loanValue')" @reset="resetLoan('principal')" />
+          </div>
         </div>
 
         <div class="grid gap-1">
@@ -91,17 +109,20 @@ const displayValue = (key: DerivableKey, decimals: number): string => {
             <label :for="loanRateId">{{ t('loanInterest') }}</label>
             <InfoTooltip :text="t('tooltipLoanRatePrefill')" :label="t('loanInterest')" />
           </div>
-          <input
-            :id="loanRateId"
-            :value="displayValue('annualRatePct', 2)"
-            type="number"
-            inputmode="decimal"
-            min="0"
-            step="0.01"
-            class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
-            @input="onDerivableInput('annualRatePct', $event)"
-            @blur="onDerivableBlur('annualRatePct')"
-          />
+          <div class="relative">
+            <input
+              :id="loanRateId"
+              :value="displayValue('annualRatePct', 2)"
+              type="number"
+              inputmode="decimal"
+              min="0"
+              step="0.01"
+              class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 pr-10 text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
+              @input="onDerivableInput('annualRatePct', $event)"
+              @blur="onDerivableBlur('annualRatePct')"
+            />
+            <ResetButton class="absolute right-2 top-1/2 -translate-y-1/2" :visible="loanChanged('annualRatePct')" :label="t('loanInterest')" @reset="resetLoan('annualRatePct')" />
+          </div>
         </div>
 
         <div class="grid gap-1">
@@ -109,17 +130,20 @@ const displayValue = (key: DerivableKey, decimals: number): string => {
             <label :for="monthlyPaymentId">{{ t('monthlyPayment') }}</label>
             <InfoTooltip :text="t('tooltipDerivedPayment')" :label="t('monthlyPayment')" />
           </div>
-          <input
-            :id="monthlyPaymentId"
-            :value="displayValue('monthlyPayment', 2)"
-            type="number"
-            inputmode="decimal"
-            min="0"
-            step="0.01"
-            class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
-            @input="onDerivableInput('monthlyPayment', $event)"
-            @blur="onDerivableBlur('monthlyPayment')"
-          />
+          <div class="relative">
+            <input
+              :id="monthlyPaymentId"
+              :value="displayValue('monthlyPayment', 2)"
+              type="number"
+              inputmode="decimal"
+              min="0"
+              step="0.01"
+              class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 pr-10 text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
+              @input="onDerivableInput('monthlyPayment', $event)"
+              @blur="onDerivableBlur('monthlyPayment')"
+            />
+            <ResetButton class="absolute right-2 top-1/2 -translate-y-1/2" :visible="loanChanged('monthlyPayment')" :label="t('monthlyPayment')" @reset="resetLoan('monthlyPayment')" />
+          </div>
         </div>
 
         <div class="grid gap-1">
@@ -127,17 +151,20 @@ const displayValue = (key: DerivableKey, decimals: number): string => {
             <label :for="paymentsLeftId">{{ t('paymentsLeft') }}</label>
             <InfoTooltip :text="t('tooltipDerivedCount')" :label="t('paymentsLeft')" />
           </div>
-          <input
-            :id="paymentsLeftId"
-            :value="displayValue('paymentsLeft', 0)"
-            type="number"
-            inputmode="numeric"
-            min="0"
-            step="1"
-            class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
-            @input="onDerivableInput('paymentsLeft', $event)"
-            @blur="onDerivableBlur('paymentsLeft')"
-          />
+          <div class="relative">
+            <input
+              :id="paymentsLeftId"
+              :value="displayValue('paymentsLeft', 0)"
+              type="number"
+              inputmode="numeric"
+              min="0"
+              step="1"
+              class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 pr-10 text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
+              @input="onDerivableInput('paymentsLeft', $event)"
+              @blur="onDerivableBlur('paymentsLeft')"
+            />
+            <ResetButton class="absolute right-2 top-1/2 -translate-y-1/2" :visible="loanChanged('paymentsLeft')" :label="t('paymentsLeft')" @reset="resetLoan('paymentsLeft')" />
+          </div>
         </div>
 
         <p class="text-xs text-slate-500 dark:text-slate-400">
@@ -155,7 +182,10 @@ const displayValue = (key: DerivableKey, decimals: number): string => {
       <div class="mt-5">
         <div class="grid gap-1">
           <label :for="spareCashId" class="text-sm text-slate-700 dark:text-slate-200">{{ t('spareCash') }}</label>
-          <input :id="spareCashId" v-model.number="market.spareCash" type="number" inputmode="numeric" min="0" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100" />
+          <div class="relative">
+            <input :id="spareCashId" v-model.number="market.spareCash" type="number" inputmode="numeric" min="0" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 pr-10 text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100" />
+            <ResetButton class="absolute right-2 top-1/2 -translate-y-1/2" :visible="marketChanged('spareCash')" :label="t('spareCash')" @reset="resetMarket('spareCash')" />
+          </div>
         </div>
       </div>
     </section>
@@ -170,7 +200,10 @@ const displayValue = (key: DerivableKey, decimals: number): string => {
             <label :for="expectedReturnId">{{ t('expectedReturn') }}</label>
             <InfoTooltip :text="t('tooltipSp500')" :label="t('expectedReturn')" />
           </div>
-          <input :id="expectedReturnId" v-model.number="market.annualReturnPct" type="number" inputmode="decimal" min="-50" step="0.01" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100" />
+          <div class="relative">
+            <input :id="expectedReturnId" v-model.number="market.annualReturnPct" type="number" inputmode="decimal" min="-50" step="0.01" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 pr-10 text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100" />
+            <ResetButton class="absolute right-2 top-1/2 -translate-y-1/2" :visible="marketChanged('annualReturnPct')" :label="t('expectedReturn')" @reset="resetMarket('annualReturnPct')" />
+          </div>
         </div>
 
         <div class="grid gap-1">
@@ -178,7 +211,10 @@ const displayValue = (key: DerivableKey, decimals: number): string => {
             <label :for="inflationId">{{ t('inflationRate') }}</label>
             <InfoTooltip :text="t('tooltipInflation')" :label="t('inflationRate')" />
           </div>
-          <input :id="inflationId" v-model.number="market.annualInflationPct" type="number" inputmode="decimal" min="-20" step="0.01" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100" />
+          <div class="relative">
+            <input :id="inflationId" v-model.number="market.annualInflationPct" type="number" inputmode="decimal" min="-20" step="0.01" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 pr-10 text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100" />
+            <ResetButton class="absolute right-2 top-1/2 -translate-y-1/2" :visible="marketChanged('annualInflationPct')" :label="t('inflationRate')" @reset="resetMarket('annualInflationPct')" />
+          </div>
         </div>
       </div>
     </section>

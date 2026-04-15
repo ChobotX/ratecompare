@@ -11,6 +11,7 @@ import LanguageSwitcher from './components/LanguageSwitcher.vue'
 import { buildComparison, deriveLoanInput } from './lib/finance'
 import { buildTermComparison } from './lib/termFinance'
 import { fetchMarketBundle } from './lib/market'
+import { defaults } from './lib/defaults'
 import type { LoanDraftInput, MarketInput, LoanInput, TermLoanInput } from './lib/types'
 
 const { t, locale } = useI18n()
@@ -41,29 +42,9 @@ const persisted = loadPersisted()
 const initialRoute = parseLocalePath(window.location.pathname)
 const activeTab = ref<ActiveTab>(initialRoute.tab)
 
-const loanDraft = reactive<LoanDraftInput>(persisted?.loanDraft ?? {
-  principal: 2_250_000,
-  annualRatePct: 5.2,
-  monthlyPayment: null,
-  paymentsLeft: 276,
-})
-
-const market = reactive<MarketInput>(persisted?.market ?? {
-  spareCash: 200_000,
-  annualReturnPct: 8,
-  annualInflationPct: 2.2,
-})
-
-const term = reactive<TermLoanInput>(persisted?.term ?? {
-  principal: 3_000_000,
-  monthlyBudget: 30_000,
-  longRatePct: 5.2,
-  longTermMonths: 360,
-  shortRatePct: 5.2,
-  shortTermMonths: 180,
-  annualReturnPct: 8,
-  annualInflationPct: 2.2,
-})
+const loanDraft = reactive<LoanDraftInput>(persisted?.loanDraft ?? { ...defaults.loanDraft })
+const market = reactive<MarketInput>(persisted?.market ?? { ...defaults.market })
+const term = reactive<TermLoanInput>(persisted?.term ?? { ...defaults.term })
 
 const rateMeta = reactive({
   sp500Source: '',
@@ -147,6 +128,13 @@ onMounted(async () => {
   syncUrl(activeTab.value, 'replace')
   window.addEventListener('popstate', onPopState)
   const { sp500, inflation, loanRate } = await fetchMarketBundle()
+  defaults.loanDraft.annualRatePct = loanRate.value
+  defaults.market.annualReturnPct = sp500.value
+  defaults.market.annualInflationPct = inflation.value
+  defaults.term.annualReturnPct = sp500.value
+  defaults.term.annualInflationPct = inflation.value
+  defaults.term.longRatePct = loanRate.value
+  defaults.term.shortRatePct = loanRate.value
   if (!persisted) {
     loanDraft.annualRatePct = loanRate.value
     market.annualReturnPct = sp500.value

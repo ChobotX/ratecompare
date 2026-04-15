@@ -2,15 +2,22 @@
 import { useId } from 'vue'
 import { useI18n } from 'vue-i18n'
 import InfoTooltip from './InfoTooltip.vue'
+import ResetButton from './ResetButton.vue'
 import type { TermLoanInput } from '../lib/types'
+import { defaults, isDefault } from '../lib/defaults'
 
 const { t } = useI18n()
 
-defineProps<{
+const props = defineProps<{
   input: TermLoanInput
   longPayment: number
   shortPayment: number
 }>()
+
+function resetTerm<K extends keyof TermLoanInput>(key: K) {
+  props.input[key] = defaults.term[key]
+}
+const termChanged = (key: keyof TermLoanInput): boolean => !isDefault(props.input[key], defaults.term[key])
 
 const principalId = `fld-${useId()}`
 const budgetId = `fld-${useId()}`
@@ -23,6 +30,9 @@ const inflId = `fld-${useId()}`
 
 const fmtMoney = (v: number): string =>
   new Intl.NumberFormat(undefined, { maximumFractionDigits: 0 }).format(Math.round(v))
+
+const inputCls = 'w-full rounded-lg border border-slate-300 bg-white px-3 py-2 pr-10 text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100'
+const resetCls = 'absolute right-2 top-1/2 -translate-y-1/2'
 </script>
 
 <template>
@@ -36,14 +46,20 @@ const fmtMoney = (v: number): string =>
             <label :for="principalId">{{ t('termPrincipal') }}</label>
             <InfoTooltip :text="t('tooltipTermPrincipal')" :label="t('termPrincipal')" />
           </div>
-          <input :id="principalId" v-model.number="input.principal" type="number" inputmode="numeric" min="0" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100" />
+          <div class="relative">
+            <input :id="principalId" v-model.number="input.principal" type="number" inputmode="numeric" min="0" :class="inputCls" />
+            <ResetButton :class="resetCls" :visible="termChanged('principal')" :label="t('termPrincipal')" @reset="resetTerm('principal')" />
+          </div>
         </div>
         <div class="grid gap-1">
           <div class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200">
             <label :for="budgetId">{{ t('termBudget') }}</label>
             <InfoTooltip :text="t('tooltipTermBudget')" :label="t('termBudget')" />
           </div>
-          <input :id="budgetId" v-model.number="input.monthlyBudget" type="number" inputmode="numeric" min="0" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100" />
+          <div class="relative">
+            <input :id="budgetId" v-model.number="input.monthlyBudget" type="number" inputmode="numeric" min="0" :class="inputCls" />
+            <ResetButton :class="resetCls" :visible="termChanged('monthlyBudget')" :label="t('termBudget')" @reset="resetTerm('monthlyBudget')" />
+          </div>
         </div>
       </div>
     </section>
@@ -57,14 +73,20 @@ const fmtMoney = (v: number): string =>
             <label :for="longRateId">{{ t('termLongRate') }}</label>
             <InfoTooltip :text="t('tooltipLoanRatePrefill')" :label="t('termLongRate')" />
           </div>
-          <input :id="longRateId" v-model.number="input.longRatePct" type="number" inputmode="decimal" min="0" step="0.01" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100" />
+          <div class="relative">
+            <input :id="longRateId" v-model.number="input.longRatePct" type="number" inputmode="decimal" min="0" step="0.01" :class="inputCls" />
+            <ResetButton :class="resetCls" :visible="termChanged('longRatePct')" :label="t('termLongRate')" @reset="resetTerm('longRatePct')" />
+          </div>
         </div>
         <div class="grid gap-1">
           <div class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200">
             <label :for="longTermId">{{ t('termLongMonths') }}</label>
             <InfoTooltip :text="t('tooltipTermLongMonths')" :label="t('termLongMonths')" />
           </div>
-          <input :id="longTermId" v-model.number="input.longTermMonths" type="number" inputmode="numeric" min="1" step="1" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100" />
+          <div class="relative">
+            <input :id="longTermId" v-model.number="input.longTermMonths" type="number" inputmode="numeric" min="1" step="1" :class="inputCls" />
+            <ResetButton :class="resetCls" :visible="termChanged('longTermMonths')" :label="t('termLongMonths')" @reset="resetTerm('longTermMonths')" />
+          </div>
         </div>
       </div>
       <p class="mt-3 text-xs text-slate-500 dark:text-slate-400">{{ t('termLongComputed', { payment: fmtMoney(longPayment) }) }}</p>
@@ -79,14 +101,20 @@ const fmtMoney = (v: number): string =>
             <label :for="shortRateId">{{ t('termShortRate') }}</label>
             <InfoTooltip :text="t('tooltipLoanRatePrefill')" :label="t('termShortRate')" />
           </div>
-          <input :id="shortRateId" v-model.number="input.shortRatePct" type="number" inputmode="decimal" min="0" step="0.01" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100" />
+          <div class="relative">
+            <input :id="shortRateId" v-model.number="input.shortRatePct" type="number" inputmode="decimal" min="0" step="0.01" :class="inputCls" />
+            <ResetButton :class="resetCls" :visible="termChanged('shortRatePct')" :label="t('termShortRate')" @reset="resetTerm('shortRatePct')" />
+          </div>
         </div>
         <div class="grid gap-1">
           <div class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200">
             <label :for="shortTermId">{{ t('termShortMonths') }}</label>
             <InfoTooltip :text="t('tooltipTermShortMonths')" :label="t('termShortMonths')" />
           </div>
-          <input :id="shortTermId" v-model.number="input.shortTermMonths" type="number" inputmode="numeric" min="1" step="1" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100" />
+          <div class="relative">
+            <input :id="shortTermId" v-model.number="input.shortTermMonths" type="number" inputmode="numeric" min="1" step="1" :class="inputCls" />
+            <ResetButton :class="resetCls" :visible="termChanged('shortTermMonths')" :label="t('termShortMonths')" @reset="resetTerm('shortTermMonths')" />
+          </div>
         </div>
       </div>
       <p class="mt-3 text-xs text-slate-500 dark:text-slate-400">{{ t('termShortComputed', { payment: fmtMoney(shortPayment) }) }}</p>
@@ -100,14 +128,20 @@ const fmtMoney = (v: number): string =>
             <label :for="returnId">{{ t('expectedReturn') }}</label>
             <InfoTooltip :text="t('tooltipSp500')" :label="t('expectedReturn')" />
           </div>
-          <input :id="returnId" v-model.number="input.annualReturnPct" type="number" inputmode="decimal" min="-50" step="0.01" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100" />
+          <div class="relative">
+            <input :id="returnId" v-model.number="input.annualReturnPct" type="number" inputmode="decimal" min="-50" step="0.01" :class="inputCls" />
+            <ResetButton :class="resetCls" :visible="termChanged('annualReturnPct')" :label="t('expectedReturn')" @reset="resetTerm('annualReturnPct')" />
+          </div>
         </div>
         <div class="grid gap-1">
           <div class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200">
             <label :for="inflId">{{ t('inflationRate') }}</label>
             <InfoTooltip :text="t('tooltipInflation')" :label="t('inflationRate')" />
           </div>
-          <input :id="inflId" v-model.number="input.annualInflationPct" type="number" inputmode="decimal" min="-20" step="0.01" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100" />
+          <div class="relative">
+            <input :id="inflId" v-model.number="input.annualInflationPct" type="number" inputmode="decimal" min="-20" step="0.01" :class="inputCls" />
+            <ResetButton :class="resetCls" :visible="termChanged('annualInflationPct')" :label="t('inflationRate')" @reset="resetTerm('annualInflationPct')" />
+          </div>
         </div>
       </div>
     </section>
