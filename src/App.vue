@@ -78,18 +78,18 @@ onMounted(async () => {
     {{ t('skipToContent') }}
   </a>
   <header class="bg-gradient-to-br from-slate-50 via-white to-sky-50 px-4 pt-10 md:px-8 dark:from-slate-950 dark:via-slate-900 dark:to-sky-950">
-    <div class="mx-auto flex max-w-7xl items-start justify-between gap-4">
-      <div class="space-y-2">
+    <div class="mx-auto max-w-7xl space-y-2">
+      <div class="flex items-center justify-between gap-4">
         <p class="text-sm uppercase tracking-[0.2em] text-sky-600 dark:text-sky-300">{{ t('appName') }}</p>
-        <h1 class="text-3xl font-bold text-slate-900 md:text-4xl dark:text-white">{{ t('title') }}</h1>
-        <p class="max-w-3xl text-slate-600 dark:text-slate-300">
-          {{ t('subtitle') }}
-        </p>
+        <div class="flex shrink-0 items-center gap-2">
+          <LanguageSwitcher />
+          <ThemeToggle />
+        </div>
       </div>
-      <div class="flex shrink-0 items-center gap-2">
-        <LanguageSwitcher />
-        <ThemeToggle />
-      </div>
+      <h1 class="text-3xl font-bold text-slate-900 md:text-4xl dark:text-white">{{ t('title') }}</h1>
+      <p class="max-w-3xl text-slate-600 dark:text-slate-300">
+        {{ t('subtitle') }}
+      </p>
     </div>
   </header>
 
