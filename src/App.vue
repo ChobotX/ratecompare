@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive } from 'vue'
+import { computed, onMounted, reactive, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import InputPanel from './components/InputPanel.vue'
 import SummaryPanel from './components/SummaryPanel.vue'
@@ -11,14 +11,29 @@ import type { LoanDraftInput, MarketInput, LoanInput } from './lib/types'
 
 const { t } = useI18n()
 
-const loanDraft = reactive<LoanDraftInput>({
+const STORAGE_KEY = 'ratecompare:inputs:v1'
+
+type Persisted = { loanDraft: LoanDraftInput; market: MarketInput }
+
+function loadPersisted(): Persisted | null {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    return raw ? (JSON.parse(raw) as Persisted) : null
+  } catch {
+    return null
+  }
+}
+
+const persisted = loadPersisted()
+
+const loanDraft = reactive<LoanDraftInput>(persisted?.loanDraft ?? {
   principal: 2_250_000,
   annualRatePct: 5.2,
   monthlyPayment: null,
   paymentsLeft: 276,
 })
 
-const market = reactive<MarketInput>({
+const market = reactive<MarketInput>(persisted?.market ?? {
   spareCash: 200_000,
   annualReturnPct: 8,
   annualInflationPct: 2.2,
@@ -36,11 +51,21 @@ const derivedLoan = computed(() => deriveLoanInput(loanDraft))
 const comparison = computed(() => (derivedLoan.value.loan ? buildComparison({ loan: derivedLoan.value.loan, market }) : null))
 const hasLoanWarning = computed(() => comparison.value?.baselineLoan.isNegativeAmortization ?? false)
 
+watch([loanDraft, market], () => {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ loanDraft, market }))
+  } catch {
+    // quota/disabled — ignore
+  }
+}, { deep: true })
+
 onMounted(async () => {
   const { sp500, inflation, loanRate } = await fetchMarketBundle()
-  loanDraft.annualRatePct = loanRate.value
-  market.annualReturnPct = sp500.value
-  market.annualInflationPct = inflation.value
+  if (!persisted) {
+    loanDraft.annualRatePct = loanRate.value
+    market.annualReturnPct = sp500.value
+    market.annualInflationPct = inflation.value
+  }
   rateMeta.sp500Source = sp500.source
   rateMeta.inflationSource = inflation.source
   rateMeta.sp500Fallback = sp500.usedFallback
