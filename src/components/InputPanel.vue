@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { useId } from 'vue'
+import { ref, useId } from 'vue'
 import { useI18n } from 'vue-i18n'
 import InfoTooltip from './InfoTooltip.vue'
 import type { DerivedLoanField, LoanDraftInput, LoanInput, MarketInput } from '../lib/types'
 
 const { t } = useI18n()
 
-defineProps<{
+const props = defineProps<{
   loanDraft: LoanDraftInput
   resolvedLoan: LoanInput | null
   market: MarketInput
@@ -43,6 +43,32 @@ const formatForInput = (value: number | null | undefined, decimals?: number): st
   }
   return value.toFixed(decimals)
 }
+
+type DerivableKey = 'annualRatePct' | 'monthlyPayment' | 'paymentsLeft'
+
+const draftBuffers = {
+  annualRatePct: ref<string | null>(null),
+  monthlyPayment: ref<string | null>(null),
+  paymentsLeft: ref<string | null>(null),
+} as const
+
+const onDerivableInput = (key: DerivableKey, event: Event) => {
+  draftBuffers[key].value = (event.target as HTMLInputElement).value
+}
+
+const onDerivableBlur = (key: DerivableKey) => {
+  const buf = draftBuffers[key].value
+  if (buf === null) return
+  props.loanDraft[key] = toNumberOrNull(buf)
+  draftBuffers[key].value = null
+}
+
+const displayValue = (key: DerivableKey, decimals: number): string => {
+  const buf = draftBuffers[key].value
+  if (buf !== null) return buf
+  if (props.loanDraft[key] != null) return String(props.loanDraft[key])
+  return formatForInput(props.resolvedLoan?.[key], decimals)
+}
 </script>
 
 <template>
@@ -67,13 +93,14 @@ const formatForInput = (value: number | null | undefined, decimals?: number): st
           </div>
           <input
             :id="loanRateId"
-            :value="loanDraft.annualRatePct ?? formatForInput(resolvedLoan?.annualRatePct, 2)"
+            :value="displayValue('annualRatePct', 2)"
             type="number"
             inputmode="decimal"
             min="0"
             step="0.01"
             class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
-            @input="loanDraft.annualRatePct = toNumberOrNull(($event.target as HTMLInputElement).value)"
+            @input="onDerivableInput('annualRatePct', $event)"
+            @blur="onDerivableBlur('annualRatePct')"
           />
         </div>
 
@@ -84,13 +111,14 @@ const formatForInput = (value: number | null | undefined, decimals?: number): st
           </div>
           <input
             :id="monthlyPaymentId"
-            :value="loanDraft.monthlyPayment ?? formatForInput(resolvedLoan?.monthlyPayment, 2)"
+            :value="displayValue('monthlyPayment', 2)"
             type="number"
             inputmode="decimal"
             min="0"
             step="0.01"
             class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
-            @input="loanDraft.monthlyPayment = toNumberOrNull(($event.target as HTMLInputElement).value)"
+            @input="onDerivableInput('monthlyPayment', $event)"
+            @blur="onDerivableBlur('monthlyPayment')"
           />
         </div>
 
@@ -101,13 +129,14 @@ const formatForInput = (value: number | null | undefined, decimals?: number): st
           </div>
           <input
             :id="paymentsLeftId"
-            :value="loanDraft.paymentsLeft ?? formatForInput(resolvedLoan?.paymentsLeft, 0)"
+            :value="displayValue('paymentsLeft', 0)"
             type="number"
             inputmode="numeric"
             min="0"
             step="1"
             class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
-            @input="loanDraft.paymentsLeft = toNumberOrNull(($event.target as HTMLInputElement).value)"
+            @input="onDerivableInput('paymentsLeft', $event)"
+            @blur="onDerivableBlur('paymentsLeft')"
           />
         </div>
 
