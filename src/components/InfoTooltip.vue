@@ -9,7 +9,9 @@ const tooltipId = `info-tooltip-${++tooltipIdCounter}`
 type Position = 'top' | 'bottom' | 'left' | 'right' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
 const DEFAULT_POSITION: Position = 'top'
 const SAFE_MARGIN = 50
+const EDGE_MARGIN = 8
 const OFFSET = 10
+const NARROW_VIEWPORT_PX = 640
 
 const show = ref(false)
 const activator = ref<HTMLElement | null>(null)
@@ -29,10 +31,43 @@ const getTooltipPosition = (): { top: number; left: number; actualPosition: Posi
     activator.value.getBoundingClientRect()
   const { width: tooltipWidth, height: tooltipHeight } = tooltip.value.getBoundingClientRect()
 
-  const isHittingRightLimit = right + tooltipWidth > window.innerWidth - SAFE_MARGIN
+  const viewportW = window.innerWidth
+  const viewportH = window.innerHeight
+  const isNarrow = viewportW < NARROW_VIEWPORT_PX
+  const isHittingRightLimit = right + tooltipWidth > viewportW - SAFE_MARGIN
   const isHittingLeftLimit = left - tooltipWidth < SAFE_MARGIN
   const isHittingTopLimit = top - tooltipHeight < SAFE_MARGIN
-  const isHittingBottomLimit = bottom + tooltipHeight > window.innerHeight - SAFE_MARGIN
+  const isHittingBottomLimit = bottom + tooltipHeight > viewportH - SAFE_MARGIN
+
+  const clampLeft = (l: number): number => {
+    const maxLeft = window.scrollX + viewportW - tooltipWidth - EDGE_MARGIN
+    const minLeft = window.scrollX + EDGE_MARGIN
+    return Math.max(minLeft, Math.min(l, maxLeft))
+  }
+  const clampTop = (t: number): number => {
+    const maxTop = window.scrollY + viewportH - tooltipHeight - EDGE_MARGIN
+    const minTop = window.scrollY + EDGE_MARGIN
+    return Math.max(minTop, Math.min(t, maxTop))
+  }
+  const clampPos = (p: { top: number; left: number; actualPosition: Position }) => ({
+    top: clampTop(p.top),
+    left: clampLeft(p.left),
+    actualPosition: p.actualPosition,
+  })
+
+  if (isNarrow) {
+    const preferBottom = isHittingTopLimit || !isHittingBottomLimit
+    const actualPosition: Position = preferBottom ? 'bottom' : 'top'
+    const rawLeft = window.scrollX + left + activatorWidth / 2 - tooltipWidth / 2
+    const topValue = preferBottom
+      ? window.scrollY + bottom + OFFSET
+      : window.scrollY + top - tooltipHeight - OFFSET
+    return {
+      top: clampTop(topValue),
+      left: clampLeft(rawLeft),
+      actualPosition,
+    }
+  }
 
   let actualPosition: Position
   switch (true) {
@@ -67,53 +102,53 @@ const getTooltipPosition = (): { top: number; left: number; actualPosition: Posi
 
   switch (actualPosition) {
     case 'left':
-      return {
+      return clampPos({
         top: window.scrollY + top + activatorHeight / 2 - tooltipHeight / 2,
         left: window.scrollX + left - tooltipWidth - OFFSET,
         actualPosition,
-      }
+      })
     case 'right':
-      return {
+      return clampPos({
         top: window.scrollY + top + activatorHeight / 2 - tooltipHeight / 2,
         left: window.scrollX + right + OFFSET,
         actualPosition,
-      }
+      })
     case 'top':
-      return {
+      return clampPos({
         top: window.scrollY + top - tooltipHeight - OFFSET,
         left: window.scrollX + left + activatorWidth / 2 - tooltipWidth / 2,
         actualPosition,
-      }
+      })
     case 'bottom':
-      return {
+      return clampPos({
         top: window.scrollY + bottom + OFFSET,
         left: window.scrollX + left + activatorWidth / 2 - tooltipWidth / 2,
         actualPosition,
-      }
+      })
     case 'bottom-left':
-      return {
+      return clampPos({
         top: window.scrollY + bottom + OFFSET,
         left: window.scrollX + left - tooltipWidth + activatorWidth + OFFSET,
         actualPosition,
-      }
+      })
     case 'bottom-right':
-      return {
+      return clampPos({
         top: window.scrollY + bottom + OFFSET,
         left: window.scrollX + right - activatorWidth - OFFSET,
         actualPosition,
-      }
+      })
     case 'top-left':
-      return {
+      return clampPos({
         top: window.scrollY + top - tooltipHeight - OFFSET,
         left: window.scrollX + left - tooltipWidth + activatorWidth + OFFSET,
         actualPosition,
-      }
+      })
     case 'top-right':
-      return {
+      return clampPos({
         top: window.scrollY + top - tooltipHeight - OFFSET,
         left: window.scrollX + right - activatorWidth - OFFSET,
         actualPosition,
-      }
+      })
   }
 }
 
