@@ -98,12 +98,27 @@ export function buildTermComparison(input: TermLoanInput): TermComparisonSummary
     horizonMonths,
   })
 
+  const noInvestStrategy = buildStrategy({
+    principal,
+    ratePct: safePct(input.longRatePct),
+    termMonths: longTerm,
+    monthlyBudget,
+    annualReturnPct: 0,
+    annualInflationPct: safePct(input.annualInflationPct),
+    horizonMonths,
+  })
+
   const budgetTooLow = monthlyBudget < Math.max(longStrategy.monthlyPayment, shortStrategy.monthlyPayment)
   const shortTermExceedsLong = shortTerm >= longTerm
 
-  const diff = longStrategy.endingBalanceReal - shortStrategy.endingBalanceReal
-  const winner: TermComparisonSummary['winner'] = Math.abs(diff) < 0.01 ? 'tie' : diff > 0 ? 'long' : 'short'
-  const winnerDeltaReal = clampMoney(Math.abs(diff))
+  const candidates: Array<{ key: Exclude<TermComparisonSummary['winner'], 'tie'>; value: number }> = [
+    { key: 'long', value: longStrategy.endingBalanceReal },
+    { key: 'short', value: shortStrategy.endingBalanceReal },
+    { key: 'noInvest', value: noInvestStrategy.endingBalanceReal },
+  ]
+  candidates.sort((a, b) => b.value - a.value)
+  const winner: TermComparisonSummary['winner'] = Math.abs(candidates[0].value - candidates[1].value) < 0.01 ? 'tie' : candidates[0].key
+  const winnerDeltaReal = clampMoney(Math.abs(candidates[0].value - candidates[1].value))
 
   return {
     horizonMonths,
@@ -111,6 +126,7 @@ export function buildTermComparison(input: TermLoanInput): TermComparisonSummary
     shortPayment: shortStrategy.monthlyPayment,
     longStrategy,
     shortStrategy,
+    noInvestStrategy,
     winner,
     winnerDeltaReal,
     budgetTooLow,

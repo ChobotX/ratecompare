@@ -15,22 +15,37 @@ const asMoney = (value: number): string =>
 const chartSeries = computed(() => [
   { key: 'long', label: t('termLongLabel'), color: '#10b981', data: props.summary.longStrategy.seriesNominal },
   { key: 'short', label: t('termShortLabel'), color: '#8b5cf6', data: props.summary.shortStrategy.seriesNominal, dashed: true },
+  { key: 'noInvest', label: t('termNoInvestLabel'), color: '#64748b', data: props.summary.noInvestStrategy.seriesNominal, dashed: true },
   { key: 'longLoan', label: t('termLongLoanLabel'), color: '#f43f5e', data: props.summary.longStrategy.loanSeriesNominal },
   { key: 'shortLoan', label: t('termShortLoanLabel'), color: '#f59e0b', data: props.summary.shortStrategy.loanSeriesNominal, dashed: true },
 ])
 
-const toneFor = (winnerKey: 'long' | 'short') => {
-  if (props.summary.winner === 'tie') return 'text-amber-600 dark:text-amber-300'
-  return props.summary.winner === winnerKey ? 'text-emerald-600 dark:text-emerald-300' : 'text-rose-600 dark:text-rose-300'
-}
+type StrategyKey = 'long' | 'short' | 'noInvest'
 
-const cardFor = (winnerKey: 'long' | 'short') => {
-  if (props.summary.winner === winnerKey) {
-    return winnerKey === 'long'
-      ? 'border-emerald-500/60 bg-emerald-500/10'
-      : 'border-violet-500/60 bg-violet-500/10'
+const rankTone = computed(() => {
+  const vals: Record<StrategyKey, number> = {
+    long: props.summary.longStrategy.endingBalanceReal,
+    short: props.summary.shortStrategy.endingBalanceReal,
+    noInvest: props.summary.noInvestStrategy.endingBalanceReal,
   }
-  return 'border-slate-200 bg-white/70 dark:border-slate-700 dark:bg-slate-950/70'
+  const list = Object.values(vals)
+  const max = Math.max(...list)
+  const min = Math.min(...list)
+  const toneFor = (v: number): string => {
+    if (v === max) return 'text-emerald-600 dark:text-emerald-300'
+    if (v === min) return 'text-rose-600 dark:text-rose-300'
+    return 'text-amber-600 dark:text-amber-300'
+  }
+  return { long: toneFor(vals.long), short: toneFor(vals.short), noInvest: toneFor(vals.noInvest) }
+})
+
+const cardFor = (winnerKey: StrategyKey) => {
+  if (props.summary.winner !== winnerKey) {
+    return 'border-slate-200 bg-white/70 dark:border-slate-700 dark:bg-slate-950/70'
+  }
+  if (winnerKey === 'long') return 'border-emerald-500/60 bg-emerald-500/10'
+  if (winnerKey === 'short') return 'border-violet-500/60 bg-violet-500/10'
+  return 'border-slate-400/60 bg-slate-500/10'
 }
 </script>
 
@@ -43,14 +58,14 @@ const cardFor = (winnerKey: 'long' | 'short') => {
     <h2 id="term-summary-heading" class="text-lg font-semibold text-emerald-700 dark:text-emerald-300">{{ t('termSummaryTitle') }}</h2>
     <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">{{ t('comparisonHorizon', { months: summary.horizonMonths }) }}</p>
 
-    <div class="mt-5 grid gap-4 md:grid-cols-2">
+    <div class="mt-5 grid gap-4 md:grid-cols-3">
       <article class="rounded-xl border p-4" :class="cardFor('long')">
         <div class="flex items-center justify-between gap-2">
           <h3 class="text-sm text-slate-600 dark:text-slate-300">{{ t('termLongLabel') }}</h3>
           <InfoTooltip :text="t('tooltipTermLong')" :label="t('termLongLabel')" />
         </div>
         <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ t('termLongDesc') }}</p>
-        <p class="mt-2 text-2xl font-semibold" :class="toneFor('long')">
+        <p class="mt-2 text-2xl font-semibold" :class="rankTone.long">
           {{ asMoney(summary.longStrategy.endingBalanceNominal) }}
         </p>
         <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
@@ -70,7 +85,7 @@ const cardFor = (winnerKey: 'long' | 'short') => {
           <InfoTooltip :text="t('tooltipTermShort')" :label="t('termShortLabel')" />
         </div>
         <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ t('termShortDesc') }}</p>
-        <p class="mt-2 text-2xl font-semibold" :class="toneFor('short')">
+        <p class="mt-2 text-2xl font-semibold" :class="rankTone.short">
           {{ asMoney(summary.shortStrategy.endingBalanceNominal) }}
         </p>
         <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
@@ -83,6 +98,26 @@ const cardFor = (winnerKey: 'long' | 'short') => {
           <dd class="text-right">{{ asMoney(summary.shortStrategy.monthlyInvestPhase1) }}</dd>
           <dt>{{ t('termInvestPhase2') }}</dt>
           <dd class="text-right">{{ asMoney(summary.shortStrategy.monthlyInvestPhase2) }}</dd>
+        </dl>
+      </article>
+
+      <article class="rounded-xl border p-4" :class="cardFor('noInvest')">
+        <div class="flex items-center justify-between gap-2">
+          <h3 class="text-sm text-slate-600 dark:text-slate-300">{{ t('termNoInvestLabel') }}</h3>
+          <InfoTooltip :text="t('tooltipTermNoInvest')" :label="t('termNoInvestLabel')" />
+        </div>
+        <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ t('termNoInvestDesc') }}</p>
+        <p class="mt-2 text-2xl font-semibold" :class="rankTone.noInvest">
+          {{ asMoney(summary.noInvestStrategy.endingBalanceNominal) }}
+        </p>
+        <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
+          {{ t('realAfterInflation') }}: {{ asMoney(summary.noInvestStrategy.endingBalanceReal) }}
+        </p>
+        <dl class="mt-3 grid grid-cols-2 gap-1 text-xs text-slate-500 dark:text-slate-400">
+          <dt>{{ t('termPaymentLabel') }}</dt>
+          <dd class="text-right">{{ asMoney(summary.noInvestStrategy.monthlyPayment) }}</dd>
+          <dt>{{ t('termInvestMonthly') }}</dt>
+          <dd class="text-right">{{ asMoney(summary.noInvestStrategy.monthlyInvestPhase1) }}</dd>
         </dl>
       </article>
     </div>

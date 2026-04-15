@@ -73,7 +73,8 @@ export interface TermComparisonSummary {
   shortPayment: number
   longStrategy: TermStrategyResult
   shortStrategy: TermStrategyResult
-  winner: 'long' | 'short' | 'tie'
+  noInvestStrategy: TermStrategyResult
+  winner: 'long' | 'short' | 'noInvest' | 'tie'
   winnerDeltaReal: number
   budgetTooLow: boolean
   shortTermExceedsLong: boolean
