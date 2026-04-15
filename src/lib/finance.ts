@@ -290,12 +290,13 @@ export function buildComparison(input: ComparisonInput): ComparisonSummary {
     freedMonthlyAmount,
     1,
   )
-  const paydownGainNominal = clampMoney(paydownPath.endingBalanceNominal - spareCash)
-  const paydownGainReal = clampMoney(paydownPath.endingBalanceReal - spareCash)
-  const investGainNominal = clampMoney(investPath.endingBalanceNominal - spareCash)
-  const investGainReal = clampMoney(investPath.endingBalanceReal - spareCash)
-  const paydownThenInvestGainNominal = clampMoney(paydownThenInvestPath.endingBalanceNominal - spareCash)
-  const paydownThenInvestGainReal = clampMoney(paydownThenInvestPath.endingBalanceReal - spareCash)
+  const deflator = Math.pow(1 + Math.max(0, monthlyRateFromAnnualPct(input.market.annualInflationPct)), horizonMonths)
+  const paydownGainNominal = clampMoney(paydownPath.endingBalanceNominal)
+  const paydownGainReal = clampMoney(paydownGainNominal / deflator)
+  const investGainNominal = clampMoney(investPath.endingBalanceNominal)
+  const investGainReal = clampMoney(investGainNominal / deflator)
+  const paydownThenInvestGainNominal = clampMoney(paydownThenInvestPath.endingBalanceNominal)
+  const paydownThenInvestGainReal = clampMoney(paydownThenInvestGainNominal / deflator)
 
   const candidates: Array<{ key: Exclude<ComparisonSummary['winner'], 'tie'>; value: number }> = [
     { key: 'invest', value: investGainReal },
