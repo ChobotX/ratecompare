@@ -63,10 +63,10 @@ const winnerCardClassByKey = computed(() => ({
 
     <div class="mt-5 grid gap-4 md:grid-cols-3">
       <article class="rounded-xl border p-4" :class="winnerCardClassByKey.invest">
-        <h3 class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
-          {{ t('investPathGain') }}
-          <InfoTooltip :text="t('tooltipInvestPath')" />
-        </h3>
+        <div class="flex items-center gap-2">
+          <h3 class="text-sm text-slate-600 dark:text-slate-300">{{ t('investPathGain') }}</h3>
+          <InfoTooltip :text="t('tooltipInvestPath')" :label="t('investPathGain')" />
+        </div>
         <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ t('investPathDesc') }}</p>
         <p class="mt-2 text-2xl font-semibold" :class="cardToneByKey.invest">
           {{ asMoney(summary.investGainNominal) }}
@@ -77,10 +77,10 @@ const winnerCardClassByKey = computed(() => ({
       </article>
 
       <article class="rounded-xl border p-4" :class="winnerCardClassByKey.paydown">
-        <h3 class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
-          {{ t('paydownPathGain') }}
-          <InfoTooltip :text="t('tooltipPaydownPath')" />
-        </h3>
+        <div class="flex items-center gap-2">
+          <h3 class="text-sm text-slate-600 dark:text-slate-300">{{ t('paydownPathGain') }}</h3>
+          <InfoTooltip :text="t('tooltipPaydownPath')" :label="t('paydownPathGain')" />
+        </div>
         <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ t('paydownPathDesc') }}</p>
         <p class="mt-2 text-2xl font-semibold" :class="cardToneByKey.paydown">
           {{ asMoney(summary.paydownGainNominal) }}
@@ -91,10 +91,10 @@ const winnerCardClassByKey = computed(() => ({
       </article>
 
       <article class="rounded-xl border p-4" :class="winnerCardClassByKey.paydownThenInvest">
-        <h3 class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
-          {{ t('paydownThenInvestPathGain') }}
-          <InfoTooltip :text="t('tooltipPaydownThenInvestPath')" />
-        </h3>
+        <div class="flex items-center gap-2">
+          <h3 class="text-sm text-slate-600 dark:text-slate-300">{{ t('paydownThenInvestPathGain') }}</h3>
+          <InfoTooltip :text="t('tooltipPaydownThenInvestPath')" :label="t('paydownThenInvestPathGain')" />
+        </div>
         <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ t('paydownThenInvestPathDesc') }}</p>
         <p class="mt-2 text-2xl font-semibold" :class="cardToneByKey.paydownThenInvest">
           {{ asMoney(summary.paydownThenInvestGainNominal) }}

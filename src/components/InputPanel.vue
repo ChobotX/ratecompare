@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useId } from 'vue'
 import { useI18n } from 'vue-i18n'
 import InfoTooltip from './InfoTooltip.vue'
 import type { DerivedLoanField, LoanDraftInput, LoanInput, MarketInput } from '../lib/types'
@@ -16,6 +17,14 @@ defineProps<{
   sp500Fallback: boolean
   inflationFallback: boolean
 }>()
+
+const loanPrincipalId = `fld-${useId()}`
+const loanRateId = `fld-${useId()}`
+const monthlyPaymentId = `fld-${useId()}`
+const paymentsLeftId = `fld-${useId()}`
+const spareCashId = `fld-${useId()}`
+const expectedReturnId = `fld-${useId()}`
+const inflationId = `fld-${useId()}`
 
 const toNumberOrNull = (raw: string): number | null => {
   if (raw.trim() === '') {
@@ -43,58 +52,64 @@ const formatForInput = (value: number | null | undefined, decimals?: number): st
       <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">{{ t('step1Description') }}</p>
 
       <div class="mt-5 grid gap-4">
-        <label class="grid gap-1">
-          <span class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200">
-            {{ t('loanValue') }}
-            <InfoTooltip :text="t('tooltipLoanValue')" />
-          </span>
-          <input v-model.number="loanDraft.principal" type="number" min="0" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100" />
-        </label>
+        <div class="grid gap-1">
+          <div class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200">
+            <label :for="loanPrincipalId">{{ t('loanValue') }}</label>
+            <InfoTooltip :text="t('tooltipLoanValue')" :label="t('loanValue')" />
+          </div>
+          <input :id="loanPrincipalId" v-model.number="loanDraft.principal" type="number" inputmode="numeric" min="0" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100" />
+        </div>
 
-        <label class="grid gap-1">
-          <span class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200">
-            {{ t('loanInterest') }}
-            <InfoTooltip :text="t('tooltipLoanRatePrefill')" />
-          </span>
+        <div class="grid gap-1">
+          <div class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200">
+            <label :for="loanRateId">{{ t('loanInterest') }}</label>
+            <InfoTooltip :text="t('tooltipLoanRatePrefill')" :label="t('loanInterest')" />
+          </div>
           <input
+            :id="loanRateId"
             :value="loanDraft.annualRatePct ?? formatForInput(resolvedLoan?.annualRatePct, 2)"
             type="number"
+            inputmode="decimal"
             min="0"
             step="0.01"
             class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
             @input="loanDraft.annualRatePct = toNumberOrNull(($event.target as HTMLInputElement).value)"
           />
-        </label>
+        </div>
 
-        <label class="grid gap-1">
-          <span class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200">
-            {{ t('monthlyPayment') }}
-            <InfoTooltip :text="t('tooltipDerivedPayment')" />
-          </span>
+        <div class="grid gap-1">
+          <div class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200">
+            <label :for="monthlyPaymentId">{{ t('monthlyPayment') }}</label>
+            <InfoTooltip :text="t('tooltipDerivedPayment')" :label="t('monthlyPayment')" />
+          </div>
           <input
+            :id="monthlyPaymentId"
             :value="loanDraft.monthlyPayment ?? formatForInput(resolvedLoan?.monthlyPayment, 2)"
             type="number"
+            inputmode="decimal"
             min="0"
             step="0.01"
             class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
             @input="loanDraft.monthlyPayment = toNumberOrNull(($event.target as HTMLInputElement).value)"
           />
-        </label>
+        </div>
 
-        <label class="grid gap-1">
-          <span class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200">
-            {{ t('paymentsLeft') }}
-            <InfoTooltip :text="t('tooltipDerivedCount')" />
-          </span>
+        <div class="grid gap-1">
+          <div class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200">
+            <label :for="paymentsLeftId">{{ t('paymentsLeft') }}</label>
+            <InfoTooltip :text="t('tooltipDerivedCount')" :label="t('paymentsLeft')" />
+          </div>
           <input
+            :id="paymentsLeftId"
             :value="loanDraft.paymentsLeft ?? formatForInput(resolvedLoan?.paymentsLeft, 0)"
             type="number"
+            inputmode="numeric"
             min="0"
             step="1"
             class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
             @input="loanDraft.paymentsLeft = toNumberOrNull(($event.target as HTMLInputElement).value)"
           />
-        </label>
+        </div>
 
         <p class="text-xs text-slate-500 dark:text-slate-400">
           {{ t('derivedFieldHint') }}:
@@ -109,10 +124,10 @@ const formatForInput = (value: number | null | undefined, decimals?: number): st
       <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">{{ t('step2Description') }}</p>
 
       <div class="mt-5">
-        <label class="grid gap-1">
-          <span class="text-sm text-slate-700 dark:text-slate-200">{{ t('spareCash') }}</span>
-          <input v-model.number="market.spareCash" type="number" min="0" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100" />
-        </label>
+        <div class="grid gap-1">
+          <label :for="spareCashId" class="text-sm text-slate-700 dark:text-slate-200">{{ t('spareCash') }}</label>
+          <input :id="spareCashId" v-model.number="market.spareCash" type="number" inputmode="numeric" min="0" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100" />
+        </div>
       </div>
     </section>
 
@@ -121,21 +136,21 @@ const formatForInput = (value: number | null | undefined, decimals?: number): st
       <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">{{ t('step3Description') }}</p>
 
       <div class="mt-5 grid gap-4">
-        <label class="grid gap-1">
-          <span class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200">
-            {{ t('expectedReturn') }}
-            <InfoTooltip :text="t('tooltipSp500')" />
-          </span>
-          <input v-model.number="market.annualReturnPct" type="number" min="-50" step="0.01" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100" />
-        </label>
+        <div class="grid gap-1">
+          <div class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200">
+            <label :for="expectedReturnId">{{ t('expectedReturn') }}</label>
+            <InfoTooltip :text="t('tooltipSp500')" :label="t('expectedReturn')" />
+          </div>
+          <input :id="expectedReturnId" v-model.number="market.annualReturnPct" type="number" inputmode="decimal" min="-50" step="0.01" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100" />
+        </div>
 
-        <label class="grid gap-1">
-          <span class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200">
-            {{ t('inflationRate') }}
-            <InfoTooltip :text="t('tooltipInflation')" />
-          </span>
-          <input v-model.number="market.annualInflationPct" type="number" min="-20" step="0.01" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100" />
-        </label>
+        <div class="grid gap-1">
+          <div class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200">
+            <label :for="inflationId">{{ t('inflationRate') }}</label>
+            <InfoTooltip :text="t('tooltipInflation')" :label="t('inflationRate')" />
+          </div>
+          <input :id="inflationId" v-model.number="market.annualInflationPct" type="number" inputmode="decimal" min="-20" step="0.01" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100" />
+        </div>
       </div>
     </section>
   </div>

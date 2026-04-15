@@ -9,8 +9,9 @@ const { t } = useI18n()
   <button
     type="button"
     :aria-label="t(theme === 'dark' ? 'themeToLight' : 'themeToDark')"
+    :aria-pressed="theme === 'dark'"
     :title="t(theme === 'dark' ? 'themeToLight' : 'themeToDark')"
-    class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-700 shadow-sm transition hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
+    class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-700 shadow-sm transition hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
     @click="toggleTheme"
   >
     <svg v-if="theme === 'dark'" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">

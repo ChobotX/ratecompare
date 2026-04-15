@@ -2,7 +2,7 @@ export const SITE_URL = 'https://ratecompare.owebs.cz'
 export const DEFAULT_LOCALE = 'en'
 export const LOCALES = ['en', 'cs', 'de', 'sk', 'pl']
 
-const OG_IMAGE = `${SITE_URL}/og-image.svg`
+const OG_IMAGE = `${SITE_URL}/og-image.png`
 
 const SEO = {
   en: {
@@ -65,6 +65,30 @@ function escapeAttr(s) {
   return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 }
 
+function escapeJsonLd(s) {
+  return String(s).replace(/</g, '\\u003c').replace(/>/g, '\\u003e').replace(/&/g, '\\u0026')
+}
+
+function renderJsonLd(locale) {
+  const meta = SEO[locale] || SEO[DEFAULT_LOCALE]
+  const canonical = `${SITE_URL}${localePath(locale)}`
+  const data = {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'RateCompare',
+    alternateName: meta.title,
+    description: meta.description,
+    url: canonical,
+    inLanguage: meta.lang,
+    applicationCategory: 'FinanceApplication',
+    operatingSystem: 'Any',
+    browserRequirements: 'Requires JavaScript',
+    isAccessibleForFree: true,
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+  }
+  return `<script type="application/ld+json">${escapeJsonLd(JSON.stringify(data))}</script>`
+}
+
 export function renderSeoBlock(locale) {
   const meta = SEO[locale] || SEO[DEFAULT_LOCALE]
   const canonical = `${SITE_URL}${localePath(locale)}`
@@ -90,7 +114,7 @@ export function renderSeoBlock(locale) {
     <meta property="og:description" content="${escapeAttr(meta.ogDescription)}" />
     <meta property="og:url" content="${canonical}" />
     <meta property="og:image" content="${OG_IMAGE}" />
-    <meta property="og:image:type" content="image/svg+xml" />
+    <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content="${escapeAttr(meta.imageAlt)}" />
@@ -101,7 +125,9 @@ export function renderSeoBlock(locale) {
     <meta name="twitter:title" content="${escapeAttr(meta.title)}" />
     <meta name="twitter:description" content="${escapeAttr(meta.ogDescription)}" />
     <meta name="twitter:image" content="${OG_IMAGE}" />
-    <meta name="twitter:image:alt" content="${escapeAttr(meta.imageAlt)}" />`
+    <meta name="twitter:image:alt" content="${escapeAttr(meta.imageAlt)}" />
+
+    ${renderJsonLd(locale)}`
 }
 
 export function renderLocaleHtml(template, locale) {

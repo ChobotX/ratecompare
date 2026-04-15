@@ -1,10 +1,15 @@
 <script setup lang="ts">
-import { nextTick, onBeforeUnmount, ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, ref, useId } from 'vue'
+import { useI18n } from 'vue-i18n'
 
-defineProps<{ text: string }>()
+const props = defineProps<{ text: string; label?: string }>()
 
-let tooltipIdCounter = 0
-const tooltipId = `info-tooltip-${++tooltipIdCounter}`
+const tooltipId = `info-tooltip-${useId()}`
+const { t } = useI18n()
+const buttonLabel = computed(() => {
+  const base = t('moreInformation')
+  return props.label ? `${base}: ${props.label}` : base
+})
 
 type Position = 'top' | 'bottom' | 'left' | 'right' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
 const DEFAULT_POSITION: Position = 'top'
@@ -191,10 +196,10 @@ onBeforeUnmount(() => {
   >
     <button
       type="button"
-      aria-label="More information"
+      :aria-label="buttonLabel"
       :aria-describedby="show ? tooltipId : undefined"
       :aria-expanded="show"
-      class="inline-flex h-4 w-4 items-center justify-center rounded-full border border-slate-400 text-[10px] font-bold text-slate-500 dark:border-slate-500 dark:text-slate-300"
+      class="inline-flex h-6 w-6 items-center justify-center rounded-full border border-slate-400 text-xs font-bold text-slate-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 dark:border-slate-500 dark:text-slate-300"
       @focus="showTooltip"
       @blur="hideTooltip"
     >

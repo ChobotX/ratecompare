@@ -26,9 +26,9 @@ const messages = {
     expectedReturn: 'Expected return (% p.a.)',
     inflationRate: 'Inflation (% p.a.)',
     comparisonHorizon: 'Comparison horizon: {months} months.',
-    investPathGain: 'Invest path gain',
-    paydownPathGain: 'Paydown path gain',
-    paydownThenInvestPathGain: 'Paydown + invest monthly payment',
+    investPathGain: 'Invest path — final balance',
+    paydownPathGain: 'Paydown path — final balance',
+    paydownThenInvestPathGain: 'Paydown + invest monthly — final balance',
     investPathDesc: 'Keep the loan running and invest your spare cash instead.',
     paydownPathDesc: 'Use spare cash to pay down the loan. Gain reflects the interest you avoid by prepaying.',
     paydownThenInvestPathDesc: 'Pay down the loan, then invest the freed monthly payment. Requires discipline, offers flexibility.',
@@ -74,6 +74,9 @@ const messages = {
     tooltipWinner: 'Winner is based on inflation-adjusted (real) gain at the same horizon.',
     themeToLight: 'Switch to light mode',
     themeToDark: 'Switch to dark mode',
+    moreInformation: 'More information',
+    skipToContent: 'Skip to main content',
+    languageLabel: 'Language',
   },
   cs: {
     appName: 'RateCompare',
@@ -100,9 +103,9 @@ const messages = {
     expectedReturn: 'Očekávaný výnos (% p.a.)',
     inflationRate: 'Inflace (% p.a.)',
     comparisonHorizon: 'Porovnávací horizont: {months} měsíců.',
-    investPathGain: 'Zisk investiční cesty',
-    paydownPathGain: 'Zisk doplacení úvěru',
-    paydownThenInvestPathGain: 'Doplatit + investovat měsíční splátku',
+    investPathGain: 'Investiční cesta — konečný zůstatek',
+    paydownPathGain: 'Doplacení úvěru — konečný zůstatek',
+    paydownThenInvestPathGain: 'Doplatit + investovat splátku — konečný zůstatek',
     investPathDesc: 'Nechat hypotéku běžet a volnou hotovost raději investovat.',
     paydownPathDesc: 'Splatit část hypotéky z volné hotovosti. Zisk tvoří ušetřené úroky, které díky předčasnému splacení neproběhnou.',
     paydownThenInvestPathDesc: 'Splatit část hypotéky a stejnou měsíční částku pak investovat. Vyžaduje disciplínu, nabízí flexibilitu.',
@@ -139,6 +142,9 @@ const messages = {
     tooltipWinner: 'Vítěz se určuje podle reálného zisku po inflaci na stejném horizontu.',
     themeToLight: 'Přepnout na světlý režim',
     themeToDark: 'Přepnout na tmavý režim',
+    moreInformation: 'Více informací',
+    skipToContent: 'Přejít na hlavní obsah',
+    languageLabel: 'Jazyk',
   },
   de: {
     appName: 'RateCompare',
@@ -165,9 +171,9 @@ const messages = {
     expectedReturn: 'Erwartete Rendite (% p.a.)',
     inflationRate: 'Inflation (% p.a.)',
     comparisonHorizon: 'Vergleichshorizont: {months} Monate.',
-    investPathGain: 'Gewinn Investment-Pfad',
-    paydownPathGain: 'Gewinn Tilgungs-Pfad',
-    paydownThenInvestPathGain: 'Tilgen + Monatsrate investieren',
+    investPathGain: 'Investment-Pfad — Endbetrag',
+    paydownPathGain: 'Tilgungs-Pfad — Endbetrag',
+    paydownThenInvestPathGain: 'Tilgen + Rate investieren — Endbetrag',
     investPathDesc: 'Kredit weiterlaufen lassen und das freie Bargeld stattdessen investieren.',
     paydownPathDesc: 'Mit freiem Bargeld den Kredit teilweise tilgen. Der Gewinn entspricht den durch Vorfälligkeit eingesparten Zinsen.',
     paydownThenInvestPathDesc: 'Kredit tilgen und danach die freie Monatsrate investieren. Erfordert Disziplin, bietet Flexibilität.',
@@ -204,6 +210,9 @@ const messages = {
     tooltipWinner: 'Gewinner ergibt sich aus dem inflationsbereinigten (realen) Gewinn bei gleichem Horizont.',
     themeToLight: 'Zum hellen Modus wechseln',
     themeToDark: 'Zum dunklen Modus wechseln',
+    moreInformation: 'Mehr Informationen',
+    skipToContent: 'Zum Hauptinhalt springen',
+    languageLabel: 'Sprache',
   },
   sk: {
     appName: 'RateCompare',
@@ -230,9 +239,9 @@ const messages = {
     expectedReturn: 'Očakávaný výnos (% p.a.)',
     inflationRate: 'Inflácia (% p.a.)',
     comparisonHorizon: 'Porovnávací horizont: {months} mesiacov.',
-    investPathGain: 'Zisk investičnej cesty',
-    paydownPathGain: 'Zisk doplatenia úveru',
-    paydownThenInvestPathGain: 'Doplatiť + investovať mesačnú splátku',
+    investPathGain: 'Investičná cesta — konečný zostatok',
+    paydownPathGain: 'Doplatenie úveru — konečný zostatok',
+    paydownThenInvestPathGain: 'Doplatiť + investovať splátku — konečný zostatok',
     investPathDesc: 'Nechať úver bežať a voľnú hotovosť radšej investovať.',
     paydownPathDesc: 'Splatiť časť úveru z voľnej hotovosti. Zisk tvoria ušetrené úroky, ktoré vďaka predčasnému splateniu nevzniknú.',
     paydownThenInvestPathDesc: 'Splatiť časť úveru a rovnakú mesačnú čiastku potom investovať. Vyžaduje disciplínu, ponúka flexibilitu.',
@@ -269,6 +278,9 @@ const messages = {
     tooltipWinner: 'Víťaz sa určuje podľa reálneho zisku po inflácii na rovnakom horizonte.',
     themeToLight: 'Prepnúť na svetlý režim',
     themeToDark: 'Prepnúť na tmavý režim',
+    moreInformation: 'Viac informácií',
+    skipToContent: 'Preskočiť na hlavný obsah',
+    languageLabel: 'Jazyk',
   },
   pl: {
     appName: 'RateCompare',
@@ -295,9 +307,9 @@ const messages = {
     expectedReturn: 'Oczekiwany zwrot (% p.a.)',
     inflationRate: 'Inflacja (% p.a.)',
     comparisonHorizon: 'Horyzont porównania: {months} miesięcy.',
-    investPathGain: 'Zysk ścieżki inwestycyjnej',
-    paydownPathGain: 'Zysk spłaty kredytu',
-    paydownThenInvestPathGain: 'Spłata + inwestowanie raty',
+    investPathGain: 'Ścieżka inwestycyjna — saldo końcowe',
+    paydownPathGain: 'Spłata kredytu — saldo końcowe',
+    paydownThenInvestPathGain: 'Spłata + inwestowanie raty — saldo końcowe',
     investPathDesc: 'Zostawić kredyt w spokoju, a wolną gotówkę zainwestować.',
     paydownPathDesc: 'Spłacić część kredytu wolną gotówką. Zysk to odsetki, których dzięki wcześniejszej spłacie uniknięto.',
     paydownThenInvestPathDesc: 'Spłacić kredyt, a potem miesięczną ratę inwestować. Wymaga dyscypliny, daje elastyczność.',
@@ -334,23 +346,29 @@ const messages = {
     tooltipWinner: 'Zwycięzca wyłaniany na podstawie realnego zysku po inflacji przy tym samym horyzoncie.',
     themeToLight: 'Przełącz na tryb jasny',
     themeToDark: 'Przełącz na tryb ciemny',
+    moreInformation: 'Więcej informacji',
+    skipToContent: 'Przejdź do treści',
+    languageLabel: 'Język',
   },
 } as const
 
-type SupportedLocale = keyof typeof messages
-const supportedLocales: SupportedLocale[] = ['en', 'cs', 'de', 'sk', 'pl']
+export type SupportedLocale = keyof typeof messages
+export const supportedLocales: SupportedLocale[] = ['en', 'cs', 'de', 'sk', 'pl']
+export const defaultLocale: SupportedLocale = 'en'
+
+export function detectBrowserLocale(): SupportedLocale {
+  const browserLocale = (navigator.language || '').toLowerCase()
+  const shortCode = browserLocale.split('-')[0]
+  if (shortCode === 'cz') return 'cs'
+  return supportedLocales.includes(shortCode as SupportedLocale) ? (shortCode as SupportedLocale) : defaultLocale
+}
 
 function detectLocale(): SupportedLocale {
   const pathLocale = window.location.pathname.split('/')[1]?.toLowerCase()
   if (supportedLocales.includes(pathLocale as SupportedLocale)) {
     return pathLocale as SupportedLocale
   }
-  const browserLocale = navigator.language.toLowerCase()
-  const shortCode = browserLocale.split('-')[0]
-  if (shortCode === 'cz') {
-    return 'cs'
-  }
-  return supportedLocales.includes(shortCode as SupportedLocale) ? (shortCode as SupportedLocale) : 'en'
+  return defaultLocale
 }
 
 export const i18n = createI18n({

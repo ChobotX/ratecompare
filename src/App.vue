@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 import InputPanel from './components/InputPanel.vue'
 import SummaryPanel from './components/SummaryPanel.vue'
 import ThemeToggle from './components/ThemeToggle.vue'
+import LanguageSwitcher from './components/LanguageSwitcher.vue'
 import { buildComparison, deriveLoanInput } from './lib/finance'
 import { fetchMarketBundle } from './lib/market'
 import type { LoanDraftInput, MarketInput, LoanInput } from './lib/types'
@@ -48,19 +49,27 @@ onMounted(async () => {
 </script>
 
 <template>
-  <main class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-sky-50 px-4 py-10 md:px-8 dark:from-slate-950 dark:via-slate-900 dark:to-sky-950">
-    <div class="mx-auto max-w-7xl space-y-6">
-      <header class="flex items-start justify-between gap-4">
-        <div class="space-y-2">
-          <p class="text-sm uppercase tracking-[0.2em] text-sky-600 dark:text-sky-300">{{ t('appName') }}</p>
-          <h1 class="text-3xl font-bold text-slate-900 md:text-4xl dark:text-white">{{ t('title') }}</h1>
-          <p class="max-w-3xl text-slate-600 dark:text-slate-300">
-            {{ t('subtitle') }}
-          </p>
-        </div>
-        <ThemeToggle class="shrink-0" />
-      </header>
+  <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:z-[10000] focus:rounded-lg focus:bg-sky-600 focus:px-4 focus:py-2 focus:text-white focus:shadow-lg">
+    {{ t('skipToContent') }}
+  </a>
+  <header class="bg-gradient-to-br from-slate-50 via-white to-sky-50 px-4 pt-10 md:px-8 dark:from-slate-950 dark:via-slate-900 dark:to-sky-950">
+    <div class="mx-auto flex max-w-7xl items-start justify-between gap-4">
+      <div class="space-y-2">
+        <p class="text-sm uppercase tracking-[0.2em] text-sky-600 dark:text-sky-300">{{ t('appName') }}</p>
+        <h1 class="text-3xl font-bold text-slate-900 md:text-4xl dark:text-white">{{ t('title') }}</h1>
+        <p class="max-w-3xl text-slate-600 dark:text-slate-300">
+          {{ t('subtitle') }}
+        </p>
+      </div>
+      <div class="flex shrink-0 items-center gap-2">
+        <LanguageSwitcher />
+        <ThemeToggle />
+      </div>
+    </div>
+  </header>
 
+  <main id="main-content" class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-sky-50 px-4 pb-10 pt-6 md:px-8 dark:from-slate-950 dark:via-slate-900 dark:to-sky-950">
+    <div class="mx-auto max-w-7xl space-y-6">
       <InputPanel
         :loan-draft="loanDraft"
         :resolved-loan="derivedLoan.loan as LoanInput | null"
