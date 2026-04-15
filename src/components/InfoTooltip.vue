@@ -3,6 +3,9 @@ import { nextTick, onBeforeUnmount, ref } from 'vue'
 
 defineProps<{ text: string }>()
 
+let tooltipIdCounter = 0
+const tooltipId = `info-tooltip-${++tooltipIdCounter}`
+
 type Position = 'top' | 'bottom' | 'left' | 'right' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
 const DEFAULT_POSITION: Position = 'top'
 const SAFE_MARGIN = 50
@@ -153,15 +156,21 @@ onBeforeUnmount(() => {
   >
     <button
       type="button"
+      aria-label="More information"
+      :aria-describedby="show ? tooltipId : undefined"
+      :aria-expanded="show"
       class="inline-flex h-4 w-4 items-center justify-center rounded-full border border-slate-400 text-[10px] font-bold text-slate-500 dark:border-slate-500 dark:text-slate-300"
       @focus="showTooltip"
       @blur="hideTooltip"
     >
-      ?
+      <span aria-hidden="true">?</span>
     </button>
     <Teleport to="body">
       <span
+        :id="tooltipId"
         ref="tooltip"
+        role="tooltip"
+        :aria-hidden="!show"
         :data-position="tooltipPosition.actualPosition"
         class="atx-like-tooltip pointer-events-none absolute z-[9999] w-72 max-w-[calc(100vw-1rem)] rounded-md border border-slate-300 bg-white p-2 text-xs text-slate-700 shadow-xl whitespace-normal break-words transition-opacity duration-150 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200"
         :style="{ top: `${tooltipPosition.top}px`, left: `${tooltipPosition.left}px` }"

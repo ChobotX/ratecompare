@@ -57,8 +57,8 @@ const winnerCardClassByKey = computed(() => ({
 </script>
 
 <template>
-  <section class="rounded-2xl border border-emerald-400/40 bg-white/80 p-5 backdrop-blur dark:border-emerald-400/30 dark:bg-slate-900/70">
-    <h2 class="text-lg font-semibold text-emerald-700 dark:text-emerald-300">{{ t('step4Title') }}</h2>
+  <section aria-live="polite" aria-labelledby="summary-heading" class="rounded-2xl border border-emerald-400/40 bg-white/80 p-5 backdrop-blur dark:border-emerald-400/30 dark:bg-slate-900/70">
+    <h2 id="summary-heading" class="text-lg font-semibold text-emerald-700 dark:text-emerald-300">{{ t('step4Title') }}</h2>
     <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">{{ t('comparisonHorizon', { months: summary.horizonMonths }) }}</p>
 
     <div class="mt-5 grid gap-4 md:grid-cols-3">
@@ -67,6 +67,7 @@ const winnerCardClassByKey = computed(() => ({
           {{ t('investPathGain') }}
           <InfoTooltip :text="t('tooltipInvestPath')" />
         </h3>
+        <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ t('investPathDesc') }}</p>
         <p class="mt-2 text-2xl font-semibold" :class="cardToneByKey.invest">
           {{ asMoney(summary.investGainNominal) }}
         </p>
@@ -80,6 +81,7 @@ const winnerCardClassByKey = computed(() => ({
           {{ t('paydownPathGain') }}
           <InfoTooltip :text="t('tooltipPaydownPath')" />
         </h3>
+        <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ t('paydownPathDesc') }}</p>
         <p class="mt-2 text-2xl font-semibold" :class="cardToneByKey.paydown">
           {{ asMoney(summary.paydownGainNominal) }}
         </p>
@@ -93,6 +95,7 @@ const winnerCardClassByKey = computed(() => ({
           {{ t('paydownThenInvestPathGain') }}
           <InfoTooltip :text="t('tooltipPaydownThenInvestPath')" />
         </h3>
+        <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ t('paydownThenInvestPathDesc') }}</p>
         <p class="mt-2 text-2xl font-semibold" :class="cardToneByKey.paydownThenInvest">
           {{ asMoney(summary.paydownThenInvestGainNominal) }}
         </p>

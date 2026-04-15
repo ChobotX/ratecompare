@@ -28,6 +28,9 @@ const messages = {
     investPathGain: 'Invest path gain',
     paydownPathGain: 'Paydown path gain',
     paydownThenInvestPathGain: 'Paydown + invest monthly payment',
+    investPathDesc: 'Keep the loan running and invest your spare cash instead.',
+    paydownPathDesc: 'Use spare cash to pay down the loan. Gain reflects the interest you avoid by prepaying.',
+    paydownThenInvestPathDesc: 'Pay down the loan, then invest the freed monthly payment. Requires discipline, offers flexibility.',
     winner: 'Winner',
     realAfterInflation: 'Real after inflation',
     winnerValue: {
@@ -97,6 +100,9 @@ const messages = {
     investPathGain: 'Zisk investiční cesty',
     paydownPathGain: 'Zisk doplacení úvěru',
     paydownThenInvestPathGain: 'Doplatit + investovat měsíční splátku',
+    investPathDesc: 'Nechat hypotéku běžet a volnou hotovost raději investovat.',
+    paydownPathDesc: 'Splatit část hypotéky z volné hotovosti. Zisk tvoří ušetřené úroky, které díky předčasnému splacení neproběhnou.',
+    paydownThenInvestPathDesc: 'Splatit část hypotéky a stejnou měsíční částku pak investovat. Vyžaduje disciplínu, nabízí flexibilitu.',
     winner: 'Vítěz',
     realAfterInflation: 'Reálně po inflaci',
     winnerValue: { invest: 'Investovat hotovost', paydown: 'Doplatit úvěr', paydownThenInvest: 'Doplatit a investovat měsíční splátku', tie: 'Remíza' },
@@ -161,6 +167,9 @@ const messages = {
     growthOnly: 'Nur Investment-Wachstum:',
     themeToLight: 'Zum hellen Modus wechseln',
     themeToDark: 'Zum dunklen Modus wechseln',
+    investPathDesc: 'Kredit weiterlaufen lassen und das freie Bargeld stattdessen investieren.',
+    paydownPathDesc: 'Mit freiem Bargeld den Kredit teilweise tilgen. Der Gewinn sind die gesparten Zinsen.',
+    paydownThenInvestPathDesc: 'Kredit tilgen und danach die freie Monatsrate investieren. Erfordert Disziplin, bietet Flexibilität.',
   },
   sk: {
     appName: 'RateCompare',
@@ -193,6 +202,9 @@ const messages = {
     growthOnly: 'Len rast investície:',
     themeToLight: 'Prepnúť na svetlý režim',
     themeToDark: 'Prepnúť na tmavý režim',
+    investPathDesc: 'Nechať úver bežať a voľnú hotovosť radšej investovať.',
+    paydownPathDesc: 'Splatiť časť úveru z voľnej hotovosti. Zisk tvoria ušetrené úroky, ktoré vďaka predčasnému splateniu nevzniknú.',
+    paydownThenInvestPathDesc: 'Splatiť časť úveru a rovnakú mesačnú čiastku potom investovať. Vyžaduje disciplínu, ponúka flexibilitu.',
   },
   pl: {
     appName: 'RateCompare',
@@ -225,6 +237,9 @@ const messages = {
     growthOnly: 'Tylko wzrost inwestycji:',
     themeToLight: 'Przełącz na tryb jasny',
     themeToDark: 'Przełącz na tryb ciemny',
+    investPathDesc: 'Kredyt zostawić w spokoju, a wolną gotówkę zainwestować.',
+    paydownPathDesc: 'Spłacić część kredytu wolną gotówką. Zysk to odsetki, których dzięki wcześniejszej spłacie uniknięto.',
+    paydownThenInvestPathDesc: 'Spłacić kredyt, a potem miesięczną ratę inwestować. Wymaga dyscypliny, daje elastyczność.',
   },
 } as const
 
