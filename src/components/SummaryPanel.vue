@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import InfoTooltip from './InfoTooltip.vue'
+import GainsChart from './GainsChart.vue'
 import type { ComparisonSummary } from '../lib/types'
 
 const props = defineProps<{
@@ -105,5 +106,6 @@ const winnerCardClassByKey = computed(() => ({
       </article>
     </div>
 
+    <GainsChart :summary="summary" />
   </section>
 </template>

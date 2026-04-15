@@ -61,6 +61,17 @@ describe('buildComparison', () => {
     expect(summary.paydownThenInvestGainNominal).toBeGreaterThanOrEqual(summary.paydownThenInvestGainReal)
     expect(summary.paydownThenInvestPath.endingBalanceReal).toBeGreaterThan(0)
     expect(['invest', 'paydown', 'paydownThenInvest', 'tie']).toContain(summary.winner)
+
+    const expectedLen = summary.horizonMonths + 1
+    expect(summary.investSeriesNominal).toHaveLength(expectedLen)
+    expect(summary.paydownSeriesNominal).toHaveLength(expectedLen)
+    expect(summary.paydownThenInvestSeriesNominal).toHaveLength(expectedLen)
+    expect(summary.investSeriesNominal[0]).toBeCloseTo(250_000, 0)
+    expect(summary.paydownSeriesNominal[0]).toBe(0)
+    expect(summary.paydownThenInvestSeriesNominal[0]).toBe(0)
+    expect(summary.investSeriesNominal.at(-1)).toBeCloseTo(summary.investGainNominal, 0)
+    expect(summary.paydownSeriesNominal.at(-1)).toBeCloseTo(summary.paydownGainNominal, 0)
+    expect(summary.paydownThenInvestSeriesNominal.at(-1)).toBeCloseTo(summary.paydownThenInvestGainNominal, 0)
   })
 
   it('keeps overflow cash in all scenarios when spare cash exceeds loan', () => {

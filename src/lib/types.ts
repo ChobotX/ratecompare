@@ -38,6 +38,7 @@ export interface LoanResult {
 export interface InvestmentResult {
   endingBalanceNominal: number
   endingBalanceReal: number
+  monthlyBalancesNominal: number[]
 }
 
 export interface ComparisonInput {
@@ -58,4 +59,7 @@ export interface ComparisonSummary {
   paydownThenInvestGainReal: number
   winner: 'invest' | 'paydown' | 'paydownThenInvest' | 'tie'
   winnerDeltaReal: number
+  investSeriesNominal: number[]
+  paydownSeriesNominal: number[]
+  paydownThenInvestSeriesNominal: number[]
 }

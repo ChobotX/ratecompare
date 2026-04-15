@@ -247,9 +247,11 @@ function calculateInvestment(
   const startMonth = Math.max(1, Math.floor(sanitizeNumber(contributionStartMonth)))
 
   let balance = principal
+  const monthlyBalancesNominal: number[] = [clampMoney(balance)]
   for (let month = 1; month <= totalMonths; month += 1) {
     const monthlyAdd = month >= startMonth ? contribution : 0
     balance = (balance + monthlyAdd) * (1 + monthlyRate)
+    monthlyBalancesNominal.push(clampMoney(balance))
   }
 
   const endingBalanceNominal = clampMoney(balance)
@@ -257,6 +259,7 @@ function calculateInvestment(
   return {
     endingBalanceNominal,
     endingBalanceReal,
+    monthlyBalancesNominal,
   }
 }
 
@@ -320,5 +323,8 @@ export function buildComparison(input: ComparisonInput): ComparisonSummary {
     paydownThenInvestGainReal,
     winner,
     winnerDeltaReal,
+    investSeriesNominal: investPath.monthlyBalancesNominal,
+    paydownSeriesNominal: paydownPath.monthlyBalancesNominal,
+    paydownThenInvestSeriesNominal: paydownThenInvestPath.monthlyBalancesNominal,
   }
 }
