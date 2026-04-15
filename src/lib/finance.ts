@@ -266,8 +266,6 @@ export function buildComparison(input: ComparisonInput): ComparisonSummary {
   const payoffAmount = Math.min(spareCash, input.loan.principal)
   const overflowCash = clampMoney(Math.max(0, spareCash - payoffAmount))
   const baselineLoan = calculateLoan(input.loan, input.market.annualInflationPct)
-  const paydownLoan = calculateLoan(input.loan, input.market.annualInflationPct, input.loan.principal - payoffAmount)
-
   const horizonMonths = baselineLoan.isNegativeAmortization ? 0 : baselineLoan.monthsToPayoff
   const investPath = calculateInvestment(spareCash, input.market.annualReturnPct, input.market.annualInflationPct, horizonMonths)
   const recastMonthlyPayment = paymentFromRateAndCount(
@@ -307,7 +305,6 @@ export function buildComparison(input: ComparisonInput): ComparisonSummary {
   return {
     horizonMonths,
     baselineLoan,
-    paydownLoan,
     investPath,
     paydownThenInvestPath,
     paydownGainNominal,

@@ -48,7 +48,6 @@ export interface ComparisonInput {
 export interface ComparisonSummary {
   horizonMonths: number
   baselineLoan: LoanResult
-  paydownLoan: LoanResult
   investPath: InvestmentResult
   paydownThenInvestPath: InvestmentResult
   paydownGainNominal: number
