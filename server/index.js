@@ -9,6 +9,7 @@ const DATA_DIR = process.env.DATA_DIR || '/data'
 const CACHE_FILE = path.join(DATA_DIR, 'market.json')
 const TTL_MS = 30 * 24 * 60 * 60 * 1000
 const FETCH_TIMEOUT_MS = 8000
+const PLAUSIBLE_ORIGIN = process.env.PLAUSIBLE_ORIGIN || 'https://plausible.owebs.cz'
 const STATIC_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', 'dist')
 const LOCALE_SET = new Set(LOCALES)
 const TAB_SET = new Set(TABS)
@@ -278,12 +279,62 @@ async function loadLocaleHtml() {
   }
 }
 
+async function proxyPlausibleScript(req, res) {
+  try {
+    const upstream = await fetch(`${PLAUSIBLE_ORIGIN}/js/script.js`, {
+      headers: { 'user-agent': req.headers['user-agent'] || '', accept: req.headers.accept || '*/*' },
+    })
+    const body = Buffer.from(await upstream.arrayBuffer())
+    send(res, upstream.status, {
+      'content-type': upstream.headers.get('content-type') || 'application/javascript; charset=utf-8',
+      'cache-control': 'public, max-age=86400',
+    }, body)
+  } catch (err) {
+    console.error('plausible script proxy failed', err)
+    send(res, 502, { 'content-type': 'text/plain' }, 'bad gateway')
+  }
+}
+
+async function proxyPlausibleEvent(req, res) {
+  try {
+    const chunks = []
+    for await (const chunk of req) chunks.push(chunk)
+    const body = Buffer.concat(chunks)
+    const xff = req.headers['x-forwarded-for']
+    const clientIp = (Array.isArray(xff) ? xff[0] : xff?.split(',')[0]?.trim()) || req.socket.remoteAddress || ''
+    const upstream = await fetch(`${PLAUSIBLE_ORIGIN}/api/event`, {
+      method: 'POST',
+      headers: {
+        'content-type': req.headers['content-type'] || 'application/json',
+        'user-agent': req.headers['user-agent'] || '',
+        'x-forwarded-for': clientIp,
+        'x-forwarded-proto': 'https',
+      },
+      body,
+    })
+    const text = await upstream.text()
+    send(res, upstream.status, {
+      'content-type': upstream.headers.get('content-type') || 'text/plain; charset=utf-8',
+      'cache-control': 'no-store',
+    }, text)
+  } catch (err) {
+    console.error('plausible event proxy failed', err)
+    send(res, 502, { 'content-type': 'text/plain' }, 'bad gateway')
+  }
+}
+
 const server = http.createServer(async (req, res) => {
   try {
     const url = (req.url || '/').split('?')[0]
     if (url === '/api/market' && req.method === 'GET') {
       const bundle = await getMarketBundle()
       return send(res, 200, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-cache' }, JSON.stringify(bundle))
+    }
+    if (url === '/js/script.js' && req.method === 'GET') {
+      return proxyPlausibleScript(req, res)
+    }
+    if (url === '/api/event' && req.method === 'POST') {
+      return proxyPlausibleEvent(req, res)
     }
     if (url === '/healthz') {
       return send(res, 200, { 'content-type': 'text/plain' }, 'ok')
