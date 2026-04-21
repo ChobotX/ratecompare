@@ -197,7 +197,7 @@ const annotCls = 'italic text-slate-500 dark:text-slate-400'
 
               <figure :class="figureCls">
                 <figcaption :class="capCls">{{ t('methodology.sectionA.amort') }}</figcaption>
-                <div :class="[formulaCls, 'flex-col items-start']" role="math" aria-label="I sub k equals B sub k minus one times r sub m. B sub k equals B sub k minus one minus open paren M minus I sub k close paren">
+                <div :class="[formulaCls, '!flex-col !items-start']" role="math" aria-label="I sub k equals B sub k minus one times r sub m. B sub k equals B sub k minus one minus open paren M minus I sub k close paren">
                   <span>I<sub>k</sub> = B<sub>k−1</sub> · r<sub>m</sub></span>
                   <span>B<sub>k</sub> = B<sub>k−1</sub> − (M − I<sub>k</sub>)</span>
                 </div>
