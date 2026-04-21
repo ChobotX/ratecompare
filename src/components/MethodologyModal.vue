@@ -101,6 +101,14 @@ const notationAria: Record<string, string> = {
   Ik: 'I sub k',
   N: 'capital N',
 }
+
+const figureCls = 'mb-4'
+const capCls = 'mb-1 text-[0.7rem] uppercase tracking-wider text-slate-500 dark:text-slate-400'
+const formulaCls = 'flex flex-wrap items-center gap-x-2 gap-y-1 overflow-x-auto rounded border-l-2 border-sky-300 bg-slate-100 px-3 py-2 font-serif text-base text-slate-900 dark:border-sky-700 dark:bg-slate-800/60 dark:text-slate-100'
+const fracCls = 'inline-flex flex-col items-center align-middle leading-tight'
+const numCls = 'border-b border-current px-1.5 pb-0.5'
+const denCls = 'px-1.5 pt-0.5'
+const annotCls = 'italic text-slate-500 dark:text-slate-400'
 </script>
 
 <template>
@@ -163,68 +171,68 @@ const notationAria: Record<string, string> = {
               </h3>
               <p class="mb-3 text-slate-600 dark:text-slate-300">{{ t('methodology.sectionA.intro') }}</p>
 
-              <figure class="formula-figure">
-                <figcaption>{{ t('methodology.sectionA.annuity') }}</figcaption>
-                <div class="formula" role="math" aria-label="M equals P times r sub m times open paren one plus r sub m close paren to the power of n, divided by open paren one plus r sub m close paren to the power of n minus one">
+              <figure :class="figureCls">
+                <figcaption :class="capCls">{{ t('methodology.sectionA.annuity') }}</figcaption>
+                <div :class="formulaCls" role="math" aria-label="M equals P times r sub m times open paren one plus r sub m close paren to the power of n, divided by open paren one plus r sub m close paren to the power of n minus one">
                   <span>M =</span>
-                  <span class="frac">
-                    <span class="num">P · r<sub>m</sub> · (1 + r<sub>m</sub>)<sup>n</sup></span>
-                    <span class="den">(1 + r<sub>m</sub>)<sup>n</sup> − 1</span>
+                  <span :class="fracCls">
+                    <span :class="numCls">P · r<sub>m</sub> · (1 + r<sub>m</sub>)<sup>n</sup></span>
+                    <span :class="denCls">(1 + r<sub>m</sub>)<sup>n</sup> − 1</span>
                   </span>
                 </div>
               </figure>
 
-              <figure class="formula-figure">
-                <figcaption>{{ t('methodology.sectionA.count') }}</figcaption>
-                <div class="formula" role="math" aria-label="n equals natural log of M divided by open paren M minus P times r sub m close paren, divided by natural log of open paren one plus r sub m close paren">
+              <figure :class="figureCls">
+                <figcaption :class="capCls">{{ t('methodology.sectionA.count') }}</figcaption>
+                <div :class="formulaCls" role="math" aria-label="n equals natural log of M divided by open paren M minus P times r sub m close paren, divided by natural log of open paren one plus r sub m close paren">
                   <span>n =</span>
-                  <span class="frac">
-                    <span class="num">ln(M / (M − P · r<sub>m</sub>))</span>
-                    <span class="den">ln(1 + r<sub>m</sub>)</span>
+                  <span :class="fracCls">
+                    <span :class="numCls">ln(M / (M − P · r<sub>m</sub>))</span>
+                    <span :class="denCls">ln(1 + r<sub>m</sub>)</span>
                   </span>
                 </div>
               </figure>
 
               <p class="mb-3 text-slate-600 dark:text-slate-300">{{ t('methodology.sectionA.rate') }}</p>
 
-              <figure class="formula-figure">
-                <figcaption>{{ t('methodology.sectionA.amort') }}</figcaption>
-                <div class="formula formula-stack" role="math" aria-label="I sub k equals B sub k minus one times r sub m. B sub k equals B sub k minus one minus open paren M minus I sub k close paren">
+              <figure :class="figureCls">
+                <figcaption :class="capCls">{{ t('methodology.sectionA.amort') }}</figcaption>
+                <div :class="[formulaCls, 'flex-col items-start']" role="math" aria-label="I sub k equals B sub k minus one times r sub m. B sub k equals B sub k minus one minus open paren M minus I sub k close paren">
                   <span>I<sub>k</sub> = B<sub>k−1</sub> · r<sub>m</sub></span>
                   <span>B<sub>k</sub> = B<sub>k−1</sub> − (M − I<sub>k</sub>)</span>
                 </div>
               </figure>
 
-              <figure class="formula-figure">
-                <figcaption>{{ t('methodology.sectionA.realInterest') }}</figcaption>
-                <div class="formula" role="math" aria-label="I real equals sum from k equals one to N of I sub k divided by open paren one plus i sub m close paren to the power of k">
+              <figure :class="figureCls">
+                <figcaption :class="capCls">{{ t('methodology.sectionA.realInterest') }}</figcaption>
+                <div :class="formulaCls" role="math" aria-label="I real equals sum from k equals one to N of I sub k divided by open paren one plus i sub m close paren to the power of k">
                   <span>I<sub>real</sub> =</span>
-                  <span class="sum" aria-hidden="true">
-                    <span class="sum-top">N</span>
-                    <span class="sum-sym">∑</span>
-                    <span class="sum-bot">k=1</span>
+                  <span class="inline-flex flex-col items-center leading-none mx-1" aria-hidden="true">
+                    <span class="text-[0.7rem]">N</span>
+                    <span class="text-2xl leading-none">∑</span>
+                    <span class="text-[0.7rem]">k=1</span>
                   </span>
-                  <span class="frac">
-                    <span class="num">I<sub>k</sub></span>
-                    <span class="den">(1 + i<sub>m</sub>)<sup>k</sup></span>
+                  <span :class="fracCls">
+                    <span :class="numCls">I<sub>k</sub></span>
+                    <span :class="denCls">(1 + i<sub>m</sub>)<sup>k</sup></span>
                   </span>
                 </div>
               </figure>
 
-              <figure class="formula-figure">
-                <figcaption>{{ t('methodology.sectionA.invest') }}</figcaption>
-                <div class="formula" role="math" aria-label="B sub k equals open paren B sub k minus one plus C sub k close paren times open paren one plus g sub m close paren">
+              <figure :class="figureCls">
+                <figcaption :class="capCls">{{ t('methodology.sectionA.invest') }}</figcaption>
+                <div :class="formulaCls" role="math" aria-label="B sub k equals open paren B sub k minus one plus C sub k close paren times open paren one plus g sub m close paren">
                   <span>B<sub>k</sub> = (B<sub>k−1</sub> + C<sub>k</sub>) · (1 + g<sub>m</sub>)</span>
                 </div>
               </figure>
 
-              <figure class="formula-figure">
-                <figcaption>{{ t('methodology.sectionA.realBalance') }}</figcaption>
-                <div class="formula" role="math" aria-label="B sub N superscript real equals B sub N divided by open paren one plus i sub m close paren to the power of N">
+              <figure :class="figureCls">
+                <figcaption :class="capCls">{{ t('methodology.sectionA.realBalance') }}</figcaption>
+                <div :class="formulaCls" role="math" aria-label="B sub N superscript real equals B sub N divided by open paren one plus i sub m close paren to the power of N">
                   <span>B<sub>N</sub><sup>real</sup> =</span>
-                  <span class="frac">
-                    <span class="num">B<sub>N</sub></span>
-                    <span class="den">(1 + i<sub>m</sub>)<sup>N</sup></span>
+                  <span :class="fracCls">
+                    <span :class="numCls">B<sub>N</sub></span>
+                    <span :class="denCls">(1 + i<sub>m</sub>)<sup>N</sup></span>
                   </span>
                 </div>
               </figure>
@@ -236,9 +244,9 @@ const notationAria: Record<string, string> = {
                 <li>{{ t('methodology.sectionA.pathBoth') }}</li>
               </ul>
 
-              <figure class="formula-figure">
-                <figcaption>{{ t('methodology.sectionA.recast') }}</figcaption>
-                <div class="formula" role="math" aria-label="M prime equals annuity of open paren P minus payoff, r, n close paren">
+              <figure :class="figureCls">
+                <figcaption :class="capCls">{{ t('methodology.sectionA.recast') }}</figcaption>
+                <div :class="formulaCls" role="math" aria-label="M prime equals annuity of open paren P minus payoff, r, n close paren">
                   <span>M′ = annuity(P − payoff, r, n)</span>
                 </div>
               </figure>
@@ -252,25 +260,25 @@ const notationAria: Record<string, string> = {
               </h3>
               <p class="mb-3 text-slate-600 dark:text-slate-300">{{ t('methodology.sectionB.intro') }}</p>
 
-              <figure class="formula-figure">
-                <figcaption>{{ t('methodology.sectionB.phase1') }}</figcaption>
-                <div class="formula" role="math" aria-label="C sub k equals max of zero and B minus M, for one less than or equal to k less than or equal to min of term and N">
+              <figure :class="figureCls">
+                <figcaption :class="capCls">{{ t('methodology.sectionB.phase1') }}</figcaption>
+                <div :class="formulaCls" role="math" aria-label="C sub k equals max of zero and B minus M, for one less than or equal to k less than or equal to min of term and N">
                   <span>C<sub>k</sub> = max(0, B − M)</span>
-                  <span class="formula-annot">for 1 ≤ k ≤ min(term, N)</span>
+                  <span :class="annotCls">for 1 ≤ k ≤ min(term, N)</span>
                 </div>
               </figure>
 
-              <figure class="formula-figure">
-                <figcaption>{{ t('methodology.sectionB.phase2') }}</figcaption>
-                <div class="formula" role="math" aria-label="C sub k equals B for k greater than term">
+              <figure :class="figureCls">
+                <figcaption :class="capCls">{{ t('methodology.sectionB.phase2') }}</figcaption>
+                <div :class="formulaCls" role="math" aria-label="C sub k equals B for k greater than term">
                   <span>C<sub>k</sub> = B</span>
-                  <span class="formula-annot">for k &gt; term</span>
+                  <span :class="annotCls">for k &gt; term</span>
                 </div>
               </figure>
 
-              <figure class="formula-figure">
-                <figcaption>{{ t('methodology.sectionB.horizonCaption') }}</figcaption>
-                <div class="formula" role="math" aria-label="N equals max of n sub long and n sub short">
+              <figure :class="figureCls">
+                <figcaption :class="capCls">{{ t('methodology.sectionB.horizonCaption') }}</figcaption>
+                <div :class="formulaCls" role="math" aria-label="N equals max of n sub long and n sub short">
                   <span>N = max(n<sub>long</sub>, n<sub>short</sub>)</span>
                 </div>
               </figure>
@@ -294,79 +302,3 @@ const notationAria: Record<string, string> = {
     </Transition>
   </Teleport>
 </template>
-
-<style scoped>
-.formula-figure {
-  margin: 0 0 0.9rem 0;
-}
-.formula-figure figcaption {
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: rgb(100 116 139);
-  margin-bottom: 0.35rem;
-}
-:global(.dark) .formula-figure figcaption {
-  color: rgb(148 163 184);
-}
-.formula {
-  font-family: ui-serif, Georgia, 'Cambria', 'Times New Roman', serif;
-  font-size: 1rem;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.35rem 0.5rem;
-  padding: 0.5rem 0.75rem;
-  border-left: 2px solid rgb(186 230 253);
-  background: rgb(248 250 252);
-  border-radius: 0.25rem;
-  overflow-x: auto;
-}
-:global(.dark) .formula {
-  background: rgb(15 23 42);
-  border-left-color: rgb(30 64 175);
-}
-.formula-stack {
-  flex-direction: column;
-  align-items: flex-start;
-}
-.formula-annot {
-  color: rgb(100 116 139);
-  font-style: italic;
-}
-:global(.dark) .formula-annot {
-  color: rgb(148 163 184);
-}
-.frac {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  vertical-align: middle;
-  line-height: 1.15;
-}
-.frac .num {
-  border-bottom: 1px solid currentColor;
-  padding: 0 0.4rem 0.15rem;
-}
-.frac .den {
-  padding: 0.15rem 0.4rem 0;
-}
-.sum {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  line-height: 1;
-  font-size: 0.75em;
-  margin: 0 0.2rem;
-}
-.sum-sym {
-  font-size: 1.8rem;
-  line-height: 0.9;
-}
-.sum-top, .sum-bot {
-  font-size: 0.7rem;
-}
-.formula sub, .formula sup {
-  font-size: 0.72em;
-}
-</style>
