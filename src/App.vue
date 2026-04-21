@@ -161,7 +161,11 @@ onBeforeUnmount(() => {
   <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:z-[10000] focus:rounded-lg focus:bg-sky-600 focus:px-4 focus:py-2 focus:text-white focus:shadow-lg">
     {{ t('skipToContent') }}
   </a>
-  <header class="bg-gradient-to-br from-slate-50 via-white to-sky-50 px-4 pt-10 md:px-8 dark:from-slate-950 dark:via-slate-900 dark:to-sky-950">
+  <header
+    class="bg-gradient-to-br from-slate-50 via-white to-sky-50 px-4 pt-10 md:px-8 dark:from-slate-950 dark:via-slate-900 dark:to-sky-950"
+    :inert="methodologyOpen || undefined"
+    :aria-hidden="methodologyOpen || undefined"
+  >
     <div class="mx-auto max-w-7xl space-y-2">
       <div class="flex items-center justify-between gap-4">
         <p class="text-sm uppercase tracking-[0.2em] text-sky-600 dark:text-sky-300">{{ t('appName') }}</p>
@@ -175,7 +179,12 @@ onBeforeUnmount(() => {
     </div>
   </header>
 
-  <main id="main-content" class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-sky-50 px-4 pb-10 pt-6 md:px-8 dark:from-slate-950 dark:via-slate-900 dark:to-sky-950">
+  <main
+    id="main-content"
+    class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-sky-50 px-4 pb-10 pt-6 md:px-8 dark:from-slate-950 dark:via-slate-900 dark:to-sky-950"
+    :inert="methodologyOpen || undefined"
+    :aria-hidden="methodologyOpen || undefined"
+  >
     <div class="mx-auto max-w-7xl space-y-6">
       <div
         ref="tabListRef"
