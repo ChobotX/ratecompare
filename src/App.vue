@@ -8,6 +8,7 @@ import TermInputPanel from './components/TermInputPanel.vue'
 import TermSummaryPanel from './components/TermSummaryPanel.vue'
 import ThemeToggle from './components/ThemeToggle.vue'
 import LanguageSwitcher from './components/LanguageSwitcher.vue'
+import MethodologyModal from './components/MethodologyModal.vue'
 import { buildComparison, deriveLoanInput } from './lib/finance'
 import { buildTermComparison } from './lib/termFinance'
 import { fetchMarketBundle } from './lib/market'
@@ -71,6 +72,7 @@ watch([loanDraft, market, term, activeTab], () => {
 }, { deep: true })
 
 const tabListRef = ref<HTMLDivElement | null>(null)
+const methodologyOpen = ref(false)
 
 function syncUrl(next: ActiveTab, method: 'push' | 'replace' = 'push') {
   const target = buildLocalePath((locale.value as SupportedLocale) ?? defaultLocale, next) + window.location.search + window.location.hash
@@ -273,9 +275,17 @@ onBeforeUnmount(() => {
         <TermSummaryPanel :summary="termSummary" />
       </section>
 
-      <footer class="text-xs text-slate-500 dark:text-slate-400">
-        {{ t('assumptions') }}
+      <footer class="flex flex-col gap-2 text-xs text-slate-500 sm:flex-row sm:items-start sm:justify-between dark:text-slate-400">
+        <span>{{ t('assumptions') }}</span>
+        <button
+          type="button"
+          class="shrink-0 self-start underline decoration-dotted underline-offset-2 hover:text-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 dark:hover:text-slate-200"
+          @click="methodologyOpen = true"
+        >
+          {{ t('methodology.link') }}
+        </button>
       </footer>
     </div>
+    <MethodologyModal :open="methodologyOpen" @update:open="methodologyOpen = $event" />
   </main>
 </template>
