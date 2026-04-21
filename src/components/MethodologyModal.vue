@@ -86,6 +86,21 @@ const notationSymbolHtml: Record<string, string> = {
   Ik: 'I<sub>k</sub>',
   N: 'N',
 }
+
+const notationAria: Record<string, string> = {
+  P: 'capital P',
+  r: 'lowercase r',
+  rm: 'r sub m',
+  n: 'lowercase n',
+  M: 'capital M',
+  g: 'lowercase g',
+  gm: 'g sub m',
+  i: 'lowercase i',
+  im: 'i sub m',
+  Bk: 'B sub k',
+  Ik: 'I sub k',
+  N: 'capital N',
+}
 </script>
 
 <template>
@@ -103,9 +118,11 @@ const notationSymbolHtml: Record<string, string> = {
       >
         <div
           ref="dialogRef"
+          id="methodology-dialog"
           role="dialog"
           aria-modal="true"
           aria-labelledby="methodology-title"
+          aria-describedby="methodology-intro"
           class="methodology-dialog relative w-full max-w-3xl rounded-2xl border border-slate-200 bg-white text-slate-800 shadow-2xl dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
         >
           <header class="flex items-center justify-between gap-4 border-b border-slate-200 px-6 py-4 dark:border-slate-700">
@@ -119,12 +136,12 @@ const notationSymbolHtml: Record<string, string> = {
               :aria-label="t('methodology.close')"
               @click="close"
             >
-              ✕
+              <span aria-hidden="true">✕</span>
             </button>
           </header>
 
           <div class="max-h-[75vh] space-y-6 overflow-y-auto px-6 py-5 text-sm leading-relaxed">
-            <p class="text-slate-600 dark:text-slate-300">{{ t('methodology.intro') }}</p>
+            <p id="methodology-intro" class="text-slate-600 dark:text-slate-300">{{ t('methodology.intro') }}</p>
 
             <section aria-labelledby="methodology-notation">
               <h3 id="methodology-notation" class="mb-2 text-base font-semibold">
@@ -132,7 +149,7 @@ const notationSymbolHtml: Record<string, string> = {
               </h3>
               <dl class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1">
                 <template v-for="k in notationKeys" :key="k">
-                  <dt class="font-mono text-slate-900 dark:text-slate-200" v-html="notationSymbolHtml[k]" />
+                  <dt class="font-mono text-slate-900 dark:text-slate-200" :aria-label="notationAria[k]" v-html="notationSymbolHtml[k]" />
                   <dd class="text-slate-600 dark:text-slate-400">
                     {{ t(`methodology.notation.${k}`) }}
                   </dd>
@@ -146,77 +163,70 @@ const notationSymbolHtml: Record<string, string> = {
               </h3>
               <p class="mb-3 text-slate-600 dark:text-slate-300">{{ t('methodology.sectionA.intro') }}</p>
 
-              <figure class="mb-3">
-                <figcaption class="mb-1 text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                  {{ t('methodology.sectionA.annuity') }}
-                </figcaption>
-                <math display="block" xmlns="http://www.w3.org/1998/Math/MathML">
-                  <mi>M</mi><mo>=</mo>
-                  <mfrac>
-                    <mrow><mi>P</mi><mo>·</mo><msub><mi>r</mi><mi>m</mi></msub><mo>·</mo><msup><mrow><mo>(</mo><mn>1</mn><mo>+</mo><msub><mi>r</mi><mi>m</mi></msub><mo>)</mo></mrow><mi>n</mi></msup></mrow>
-                    <mrow><msup><mrow><mo>(</mo><mn>1</mn><mo>+</mo><msub><mi>r</mi><mi>m</mi></msub><mo>)</mo></mrow><mi>n</mi></msup><mo>−</mo><mn>1</mn></mrow>
-                  </mfrac>
-                </math>
+              <figure class="formula-figure">
+                <figcaption>{{ t('methodology.sectionA.annuity') }}</figcaption>
+                <div class="formula" role="math" aria-label="M equals P times r sub m times open paren one plus r sub m close paren to the power of n, divided by open paren one plus r sub m close paren to the power of n minus one">
+                  <span>M =</span>
+                  <span class="frac">
+                    <span class="num">P · r<sub>m</sub> · (1 + r<sub>m</sub>)<sup>n</sup></span>
+                    <span class="den">(1 + r<sub>m</sub>)<sup>n</sup> − 1</span>
+                  </span>
+                </div>
               </figure>
 
-              <figure class="mb-3">
-                <figcaption class="mb-1 text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                  {{ t('methodology.sectionA.count') }}
-                </figcaption>
-                <math display="block" xmlns="http://www.w3.org/1998/Math/MathML">
-                  <mi>n</mi><mo>=</mo>
-                  <mfrac>
-                    <mrow><mi>ln</mi><mo>(</mo><mi>M</mi><mo>/</mo><mo>(</mo><mi>M</mi><mo>−</mo><mi>P</mi><mo>·</mo><msub><mi>r</mi><mi>m</mi></msub><mo>)</mo><mo>)</mo></mrow>
-                    <mrow><mi>ln</mi><mo>(</mo><mn>1</mn><mo>+</mo><msub><mi>r</mi><mi>m</mi></msub><mo>)</mo></mrow>
-                  </mfrac>
-                </math>
+              <figure class="formula-figure">
+                <figcaption>{{ t('methodology.sectionA.count') }}</figcaption>
+                <div class="formula" role="math" aria-label="n equals natural log of M divided by open paren M minus P times r sub m close paren, divided by natural log of open paren one plus r sub m close paren">
+                  <span>n =</span>
+                  <span class="frac">
+                    <span class="num">ln(M / (M − P · r<sub>m</sub>))</span>
+                    <span class="den">ln(1 + r<sub>m</sub>)</span>
+                  </span>
+                </div>
               </figure>
 
               <p class="mb-3 text-slate-600 dark:text-slate-300">{{ t('methodology.sectionA.rate') }}</p>
 
-              <figure class="mb-3">
-                <figcaption class="mb-1 text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                  {{ t('methodology.sectionA.amort') }}
-                </figcaption>
-                <math display="block" xmlns="http://www.w3.org/1998/Math/MathML">
-                  <msub><mi>I</mi><mi>k</mi></msub><mo>=</mo><msub><mi>B</mi><mrow><mi>k</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>·</mo><msub><mi>r</mi><mi>m</mi></msub>
-                  <mspace width="1em" />
-                  <msub><mi>B</mi><mi>k</mi></msub><mo>=</mo><msub><mi>B</mi><mrow><mi>k</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>−</mo><mo>(</mo><mi>M</mi><mo>−</mo><msub><mi>I</mi><mi>k</mi></msub><mo>)</mo>
-                </math>
+              <figure class="formula-figure">
+                <figcaption>{{ t('methodology.sectionA.amort') }}</figcaption>
+                <div class="formula formula-stack" role="math" aria-label="I sub k equals B sub k minus one times r sub m. B sub k equals B sub k minus one minus open paren M minus I sub k close paren">
+                  <span>I<sub>k</sub> = B<sub>k−1</sub> · r<sub>m</sub></span>
+                  <span>B<sub>k</sub> = B<sub>k−1</sub> − (M − I<sub>k</sub>)</span>
+                </div>
               </figure>
 
-              <figure class="mb-3">
-                <figcaption class="mb-1 text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                  {{ t('methodology.sectionA.realInterest') }}
-                </figcaption>
-                <math display="block" xmlns="http://www.w3.org/1998/Math/MathML">
-                  <msub><mi>I</mi><mi>real</mi></msub><mo>=</mo>
-                  <munderover><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mi>N</mi></munderover>
-                  <mfrac><msub><mi>I</mi><mi>k</mi></msub><msup><mrow><mo>(</mo><mn>1</mn><mo>+</mo><msub><mi>i</mi><mi>m</mi></msub><mo>)</mo></mrow><mi>k</mi></msup></mfrac>
-                </math>
+              <figure class="formula-figure">
+                <figcaption>{{ t('methodology.sectionA.realInterest') }}</figcaption>
+                <div class="formula" role="math" aria-label="I real equals sum from k equals one to N of I sub k divided by open paren one plus i sub m close paren to the power of k">
+                  <span>I<sub>real</sub> =</span>
+                  <span class="sum" aria-hidden="true">
+                    <span class="sum-top">N</span>
+                    <span class="sum-sym">∑</span>
+                    <span class="sum-bot">k=1</span>
+                  </span>
+                  <span class="frac">
+                    <span class="num">I<sub>k</sub></span>
+                    <span class="den">(1 + i<sub>m</sub>)<sup>k</sup></span>
+                  </span>
+                </div>
               </figure>
 
-              <figure class="mb-3">
-                <figcaption class="mb-1 text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                  {{ t('methodology.sectionA.invest') }}
-                </figcaption>
-                <math display="block" xmlns="http://www.w3.org/1998/Math/MathML">
-                  <msub><mi>B</mi><mi>k</mi></msub><mo>=</mo>
-                  <mo>(</mo><msub><mi>B</mi><mrow><mi>k</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>+</mo><msub><mi>C</mi><mi>k</mi></msub><mo>)</mo><mo>·</mo><mo>(</mo><mn>1</mn><mo>+</mo><msub><mi>g</mi><mi>m</mi></msub><mo>)</mo>
-                </math>
+              <figure class="formula-figure">
+                <figcaption>{{ t('methodology.sectionA.invest') }}</figcaption>
+                <div class="formula" role="math" aria-label="B sub k equals open paren B sub k minus one plus C sub k close paren times open paren one plus g sub m close paren">
+                  <span>B<sub>k</sub> = (B<sub>k−1</sub> + C<sub>k</sub>) · (1 + g<sub>m</sub>)</span>
+                </div>
               </figure>
 
-              <figure class="mb-3">
-                <figcaption class="mb-1 text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                  {{ t('methodology.sectionA.realBalance') }}
-                </figcaption>
-                <math display="block" xmlns="http://www.w3.org/1998/Math/MathML">
-                  <msubsup><mi>B</mi><mi>N</mi><mi>real</mi></msubsup><mo>=</mo>
-                  <mfrac>
-                    <msub><mi>B</mi><mi>N</mi></msub>
-                    <msup><mrow><mo>(</mo><mn>1</mn><mo>+</mo><msub><mi>i</mi><mi>m</mi></msub><mo>)</mo></mrow><mi>N</mi></msup>
-                  </mfrac>
-                </math>
+              <figure class="formula-figure">
+                <figcaption>{{ t('methodology.sectionA.realBalance') }}</figcaption>
+                <div class="formula" role="math" aria-label="B sub N superscript real equals B sub N divided by open paren one plus i sub m close paren to the power of N">
+                  <span>B<sub>N</sub><sup>real</sup> =</span>
+                  <span class="frac">
+                    <span class="num">B<sub>N</sub></span>
+                    <span class="den">(1 + i<sub>m</sub>)<sup>N</sup></span>
+                  </span>
+                </div>
               </figure>
 
               <h4 class="mb-1 text-sm font-semibold">{{ t('methodology.sectionA.pathsTitle') }}</h4>
@@ -226,14 +236,11 @@ const notationSymbolHtml: Record<string, string> = {
                 <li>{{ t('methodology.sectionA.pathBoth') }}</li>
               </ul>
 
-              <figure class="mb-3">
-                <figcaption class="mb-1 text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                  {{ t('methodology.sectionA.recast') }}
-                </figcaption>
-                <math display="block" xmlns="http://www.w3.org/1998/Math/MathML">
-                  <msup><mi>M</mi><mo>′</mo></msup><mo>=</mo>
-                  <mtext>annuity</mtext><mo>(</mo><mi>P</mi><mo>−</mo><mi>payoff</mi><mo>,</mo><mspace width="0.2em" /><mi>r</mi><mo>,</mo><mspace width="0.2em" /><mi>n</mi><mo>)</mo>
-                </math>
+              <figure class="formula-figure">
+                <figcaption>{{ t('methodology.sectionA.recast') }}</figcaption>
+                <div class="formula" role="math" aria-label="M prime equals annuity of open paren P minus payoff, r, n close paren">
+                  <span>M′ = annuity(P − payoff, r, n)</span>
+                </div>
               </figure>
 
               <p class="text-slate-600 dark:text-slate-300">{{ t('methodology.sectionA.winner') }}</p>
@@ -245,39 +252,27 @@ const notationSymbolHtml: Record<string, string> = {
               </h3>
               <p class="mb-3 text-slate-600 dark:text-slate-300">{{ t('methodology.sectionB.intro') }}</p>
 
-              <figure class="mb-3">
-                <figcaption class="mb-1 text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                  {{ t('methodology.sectionB.phase1') }}
-                </figcaption>
-                <math display="block" xmlns="http://www.w3.org/1998/Math/MathML">
-                  <msub><mi>C</mi><mi>k</mi></msub><mo>=</mo><mi>max</mi><mo>(</mo><mn>0</mn><mo>,</mo><mi>B</mi><mo>−</mo><mi>M</mi><mo>)</mo>
-                  <mspace width="1em" />
-                  <mtext>for</mtext>
-                  <mspace width="0.3em" />
-                  <mn>1</mn><mo>≤</mo><mi>k</mi><mo>≤</mo><mi>min</mi><mo>(</mo><mi>term</mi><mo>,</mo><mi>N</mi><mo>)</mo>
-                </math>
+              <figure class="formula-figure">
+                <figcaption>{{ t('methodology.sectionB.phase1') }}</figcaption>
+                <div class="formula" role="math" aria-label="C sub k equals max of zero and B minus M, for one less than or equal to k less than or equal to min of term and N">
+                  <span>C<sub>k</sub> = max(0, B − M)</span>
+                  <span class="formula-annot">for 1 ≤ k ≤ min(term, N)</span>
+                </div>
               </figure>
 
-              <figure class="mb-3">
-                <figcaption class="mb-1 text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                  {{ t('methodology.sectionB.phase2') }}
-                </figcaption>
-                <math display="block" xmlns="http://www.w3.org/1998/Math/MathML">
-                  <msub><mi>C</mi><mi>k</mi></msub><mo>=</mo><mi>B</mi>
-                  <mspace width="1em" />
-                  <mtext>for</mtext>
-                  <mspace width="0.3em" />
-                  <mi>k</mi><mo>&gt;</mo><mi>term</mi>
-                </math>
+              <figure class="formula-figure">
+                <figcaption>{{ t('methodology.sectionB.phase2') }}</figcaption>
+                <div class="formula" role="math" aria-label="C sub k equals B for k greater than term">
+                  <span>C<sub>k</sub> = B</span>
+                  <span class="formula-annot">for k &gt; term</span>
+                </div>
               </figure>
 
-              <figure class="mb-3">
-                <figcaption class="mb-1 text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                  {{ t('methodology.sectionB.horizonCaption') }}
-                </figcaption>
-                <math display="block" xmlns="http://www.w3.org/1998/Math/MathML">
-                  <mi>N</mi><mo>=</mo><mi>max</mi><mo>(</mo><msub><mi>n</mi><mi>long</mi></msub><mo>,</mo><msub><mi>n</mi><mi>short</mi></msub><mo>)</mo>
-                </math>
+              <figure class="formula-figure">
+                <figcaption>{{ t('methodology.sectionB.horizonCaption') }}</figcaption>
+                <div class="formula" role="math" aria-label="N equals max of n sub long and n sub short">
+                  <span>N = max(n<sub>long</sub>, n<sub>short</sub>)</span>
+                </div>
               </figure>
 
               <p class="text-slate-600 dark:text-slate-300">{{ t('methodology.sectionB.strategies') }}</p>
@@ -301,10 +296,77 @@ const notationSymbolHtml: Record<string, string> = {
 </template>
 
 <style scoped>
-.methodology-dialog math {
-  font-size: 1.05em;
+.formula-figure {
+  margin: 0 0 0.9rem 0;
+}
+.formula-figure figcaption {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgb(100 116 139);
+  margin-bottom: 0.35rem;
+}
+:global(.dark) .formula-figure figcaption {
+  color: rgb(148 163 184);
+}
+.formula {
+  font-family: ui-serif, Georgia, 'Cambria', 'Times New Roman', serif;
+  font-size: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-left: 2px solid rgb(186 230 253);
+  background: rgb(248 250 252);
+  border-radius: 0.25rem;
   overflow-x: auto;
-  max-width: 100%;
-  display: block;
+}
+:global(.dark) .formula {
+  background: rgb(15 23 42);
+  border-left-color: rgb(30 64 175);
+}
+.formula-stack {
+  flex-direction: column;
+  align-items: flex-start;
+}
+.formula-annot {
+  color: rgb(100 116 139);
+  font-style: italic;
+}
+:global(.dark) .formula-annot {
+  color: rgb(148 163 184);
+}
+.frac {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  vertical-align: middle;
+  line-height: 1.15;
+}
+.frac .num {
+  border-bottom: 1px solid currentColor;
+  padding: 0 0.4rem 0.15rem;
+}
+.frac .den {
+  padding: 0.15rem 0.4rem 0;
+}
+.sum {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1;
+  font-size: 0.75em;
+  margin: 0 0.2rem;
+}
+.sum-sym {
+  font-size: 1.8rem;
+  line-height: 0.9;
+}
+.sum-top, .sum-bot {
+  font-size: 0.7rem;
+}
+.formula sub, .formula sup {
+  font-size: 0.72em;
 }
 </style>

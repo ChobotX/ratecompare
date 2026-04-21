@@ -280,6 +280,9 @@ onBeforeUnmount(() => {
         <button
           type="button"
           class="shrink-0 self-start underline decoration-dotted underline-offset-2 hover:text-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 dark:hover:text-slate-200"
+          aria-haspopup="dialog"
+          :aria-expanded="methodologyOpen"
+          aria-controls="methodology-dialog"
           @click="methodologyOpen = true"
         >
           {{ t('methodology.link') }}
